@@ -47,7 +47,9 @@
             app:iconGravity="textStart"
             app:iconPadding="@dimen/icon_padding"
             app:iconSize="@dimen/icon_size"
-            app:iconTint="@color/icon_color" />
+            app:iconTint="@color/icon_color"
+            android:textAllCaps="false"
+            android:fontFamily="@font/roboto"/>
 
         <Button
             android:id="@+id/button_library"
@@ -64,7 +66,9 @@
             app:iconGravity="textStart"
             app:iconPadding="@dimen/icon_padding"
             app:iconSize="@dimen/icon_size"
-            app:iconTint="@color/icon_color" />
+            app:iconTint="@color/icon_color"
+            android:textAllCaps="false"
+            android:fontFamily="@font/roboto"/>
 
         <Button
             android:id="@+id/button_settings"
@@ -81,7 +85,9 @@
             app:iconGravity="textStart"
             app:iconPadding="@dimen/icon_padding"
             app:iconSize="@dimen/icon_size"
-            app:iconTint="@color/icon_color" />
+            app:iconTint="@color/icon_color"
+            android:textAllCaps="false"
+            android:fontFamily="@font/roboto"/>
 
     </LinearLayout>
 </LinearLayout>
