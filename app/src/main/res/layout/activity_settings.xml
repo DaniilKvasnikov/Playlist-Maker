@@ -16,7 +16,7 @@
         android:gravity="start">
 
         <Button
-            android:id="@+id/abutton"
+            android:id="@+id/button_back"
             android:layout_width="48dp"
             android:layout_height="wrap_content"
             app:backgroundTint="@color/background"
