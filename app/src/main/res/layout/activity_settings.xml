@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,45 +8,17 @@
     android:orientation="vertical"
     android:background="@color/background_settings">
 
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/panel_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:layout_gravity="start"
         android:visibility="visible"
-        android:gravity="start">
+        app:title="@string/text_settings"
+        app:navigationIcon="@drawable/back"
+        app:titleTextColor="@color/text_color_header_settings"
+        app:titleTextAppearance="@style/HeaderTitleStyle"/>
 
-        <Button
-            android:id="@+id/button_back"
-            android:layout_width="48dp"
-            android:layout_height="wrap_content"
-            app:backgroundTint="@color/background"
-            app:icon="@drawable/back"
-            app:iconTint="@color/black"
-            app:iconSize="@dimen/icon_size_back"
-            style="?android:attr/borderlessButtonStyle"
-            android:text=""
-            android:gravity="center"/>
-
-        <TextView
-            android:id="@+id/text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="16dp"
-            android:text="@string/text_settings"
-            android:textSize="@dimen/text_size"
-            android:textColor="@color/text_color_header_settings"
-            android:gravity="center"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="top">
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch_theme"
@@ -55,7 +28,8 @@
             android:text="@string/dark_theme"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_settings"
-            android:fontFamily="@font/roboto"/>
+            android:fontFamily="@font/roboto"
+            android:theme="@style/DarkThemeSwitchStyle"/>
 
         <Button
             android:id="@+id/button_search"
@@ -111,5 +85,4 @@
             android:textAllCaps="false"
             android:fontFamily="@font/roboto"/>
 
-    </LinearLayout>
 </LinearLayout>

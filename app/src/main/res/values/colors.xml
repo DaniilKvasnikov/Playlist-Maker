@@ -10,5 +10,7 @@
     <color name="background_settings">#FFF</color>
     <color name="text_color_header_settings">#000</color>
     <color name="icon_color_settings">#AEAFB4</color>
+    <color name="button_back">#1A1B22</color>
+    <color name="DarkThemeSwitchColor">#00D6C3</color>
 
 </resources>
