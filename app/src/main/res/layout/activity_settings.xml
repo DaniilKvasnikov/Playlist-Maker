@@ -29,19 +29,19 @@
         android:text="@string/dark_theme"/>
 
     <Button
-        android:id="@+id/button_search"
+        android:id="@+id/button_share"
         style="@style/SettingsScreenButton"
         android:text="@string/text_share"
         app:icon="@drawable/share"/>
 
     <Button
-        android:id="@+id/button_library"
+        android:id="@+id/button_email"
         style="@style/SettingsScreenButton"
         android:text="@string/text_support"
         app:icon="@drawable/support" />
 
     <Button
-        android:id="@+id/button_settings"
+        android:id="@+id/button_practicum_offer"
         style="@style/SettingsScreenButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
