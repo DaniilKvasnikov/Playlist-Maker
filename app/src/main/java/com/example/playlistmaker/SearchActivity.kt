@@ -15,6 +15,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.ViewUtils.hideKeyboard
 
 class SearchActivity : AppCompatActivity() {
+    private var stringInput : String = ""
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +39,7 @@ class SearchActivity : AppCompatActivity() {
         search.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 btnClear.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
+                stringInput = s.toString()
             }
 
             override fun beforeTextChanged(
@@ -59,5 +61,23 @@ class SearchActivity : AppCompatActivity() {
 
         }
         )
+    }
+
+    override fun onSaveInstanceState(
+        outState: Bundle
+    ) {
+        super.onSaveInstanceState(outState)
+        outState.putString(STRING_INPUT, stringInput)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        stringInput = savedInstanceState.getString(STRING_INPUT, "")
+        val search = findViewById<EditText>(R.id.edittext_serach)
+        search.setText(stringInput)
+    }
+
+    companion object {
+        const val STRING_INPUT = "STRING_INPUT"
     }
 }
