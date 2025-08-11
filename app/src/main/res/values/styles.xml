@@ -48,7 +48,7 @@
         <item name="android:textColor">@color/text_color_settings</item>
         <item name="android:textSize">@dimen/text_size_settings</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">start</item>
+        <item name="android:gravity">center_vertical|start</item>
         <item name="iconGravity">end</item>
         <item name="iconTint">@color/icon_color_settings</item>
         <item name="iconPadding">0dp</item>
