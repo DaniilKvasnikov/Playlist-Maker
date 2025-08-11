@@ -11,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.doOnTextChanged
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.ViewUtils.hideKeyboard
 
@@ -38,31 +39,10 @@ class SearchActivity : AppCompatActivity() {
             hideKeyboard(search)
         }
         btnClear.visibility = View.GONE
-        search.addTextChangedListener(object: TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                btnClear.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
-                stringInput = s.toString()
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-
-            }
-
+        search.doOnTextChanged {s, _, _, _ ->
+            btnClear.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
+            stringInput = s.toString()
         }
-        )
     }
 
     override fun onSaveInstanceState(
