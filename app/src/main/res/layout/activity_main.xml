@@ -16,19 +16,22 @@
         app:titleTextAppearance="@style/HeaderTitleStyle"
         app:titleTextColor="@color/text_color_header"/>
 
-    <Button style="@style/MainScreenButton"
+    <com.google.android.material.button.MaterialButton
+        style="@style/MainScreenButton"
             android:id="@+id/button_search"
             android:text="@string/text_search"
             app:icon="@drawable/search"/>
 
-        <Button style="@style/MainScreenButton"
-            android:id="@+id/button_library"
-            android:text="@string/text_library"
-            app:icon="@drawable/library"/>
+    <com.google.android.material.button.MaterialButton
+        style="@style/MainScreenButton"
+        android:id="@+id/button_library"
+        android:text="@string/text_library"
+        app:icon="@drawable/library"/>
 
-        <Button style="@style/MainScreenButton"
-            android:id="@+id/button_settings"
-            android:text="@string/text_settings"
-            app:icon="@drawable/settings"/>
+    <com.google.android.material.button.MaterialButton
+        style="@style/MainScreenButton"
+        android:id="@+id/button_settings"
+        android:text="@string/text_settings"
+        app:icon="@drawable/settings"/>
 
 </LinearLayout>
