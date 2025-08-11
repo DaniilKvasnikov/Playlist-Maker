@@ -15,6 +15,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.ViewUtils.hideKeyboard
 
 class SearchActivity : AppCompatActivity() {
+    private lateinit var search: EditText
     private var stringInput : String = ""
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +32,7 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
         val btnClear = findViewById<ImageButton>(R.id.button_clear)
-        val search = findViewById<EditText>(R.id.edittext_serach)
+        search = findViewById<EditText>(R.id.edittext_serach)
         btnClear.setOnClickListener {
             search.setText("")
             hideKeyboard(search)
@@ -74,7 +75,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         stringInput = savedInstanceState.getString(STRING_INPUT, "")
-        val search = findViewById<EditText>(R.id.edittext_serach)
         search.setText(stringInput)
     }
 
