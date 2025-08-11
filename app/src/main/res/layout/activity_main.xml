@@ -14,63 +14,24 @@
         android:layout_gravity="start"
         app:title="@string/app_name"
         app:titleTextAppearance="@style/HeaderTitleStyle"
-        app:titleTextColor="@color/text_color_header" />
+        app:titleTextColor="@color/text_color_header"/>
 
-        <Button
+    <com.google.android.material.button.MaterialButton
+        style="@style/MainScreenButton"
             android:id="@+id/button_search"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="@dimen/button_margin"
             android:text="@string/text_search"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size"
-            app:backgroundTint="@color/button_color"
-            app:cornerRadius="@dimen/corner_radius"
-            app:icon="@drawable/search"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/icon_padding"
-            app:iconSize="@dimen/icon_size"
-            app:iconTint="@color/icon_color"
-            android:textAllCaps="false"
-            android:fontFamily="@font/roboto"/>
+            app:icon="@drawable/ic_search_19"/>
 
-        <Button
-            android:id="@+id/button_library"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="@dimen/button_margin"
-            android:text="@string/text_library"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size"
-            app:backgroundTint="@color/button_color"
-            app:cornerRadius="@dimen/corner_radius"
-            app:icon="@drawable/library"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/icon_padding"
-            app:iconSize="@dimen/icon_size"
-            app:iconTint="@color/icon_color"
-            android:textAllCaps="false"
-            android:fontFamily="@font/roboto"/>
+    <com.google.android.material.button.MaterialButton
+        style="@style/MainScreenButton"
+        android:id="@+id/button_library"
+        android:text="@string/text_library"
+        app:icon="@drawable/ic_library_20"/>
 
-        <Button
-            android:id="@+id/button_settings"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_margin="@dimen/button_margin"
-            android:text="@string/text_settings"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size"
-            app:backgroundTint="@color/button_color"
-            app:cornerRadius="@dimen/corner_radius"
-            app:icon="@drawable/settings"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/icon_padding"
-            app:iconSize="@dimen/icon_size"
-            app:iconTint="@color/icon_color"
-            android:textAllCaps="false"
-            android:fontFamily="@font/roboto"/>
+    <com.google.android.material.button.MaterialButton
+        style="@style/MainScreenButton"
+        android:id="@+id/button_settings"
+        android:text="@string/text_settings"
+        app:icon="@drawable/ic_settings_20"/>
 
 </LinearLayout>

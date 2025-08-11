@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#1A1B22</color>
+    <color name="background_settings">#1A1B22</color>
+    <color name="DarkThemeSwitchColor">#3772E7</color>
+    <color name="text_color_settings">#FFFFFF</color>
+    <color name="text_color_header_settings">#FFFFFF</color>
+    <color name="button_back_settings">#FFFFFF</color>
+    <color name="icon_color_settings">#FFF</color>
+    <color name="icon_color_search">#1A1B22</color>
+    <color name="text_color_search">#1A1B22</color>
+</resources>

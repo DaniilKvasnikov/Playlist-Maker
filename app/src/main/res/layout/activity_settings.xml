@@ -1,88 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
-    android:orientation="vertical"
-    android:background="@color/background_settings">
+    android:background="@color/background_settings"
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/panel_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_gravity="start"
         android:visibility="visible"
+        android:fontFamily="@font/ys_display_regular"
+        app:navigationIcon="@drawable/ic_back_16"
         app:title="@string/text_settings"
-        app:navigationIcon="@drawable/back"
-        app:titleTextColor="@color/text_color_header_settings"
-        app:titleTextAppearance="@style/HeaderTitleStyle"/>
+        app:titleTextAppearance="@style/HeaderTitleStyle"
+        app:titleTextColor="@color/text_color_header_settings" />
 
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_theme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/icon_padding"
-            android:text="@string/dark_theme"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_settings"
-            android:fontFamily="@font/roboto"
-            android:theme="@style/DarkThemeSwitchStyle"/>
+    <androidx.appcompat.widget.SwitchCompat
+        style="@style/DarkThemeSwitchStyle"
+        android:id="@+id/switch_theme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/dark_theme"/>
 
-        <Button
-            android:id="@+id/button_search"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto"
-            android:gravity="start"
-            android:text="@string/text_share"
-            android:textAllCaps="false"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_settings"
-            app:backgroundTint="@color/button_color"
-            app:icon="@drawable/share"
-            app:iconGravity="end"
-            app:iconPadding="@dimen/icon_padding"
-            app:iconSize="@dimen/icon_size"
-            app:iconTint="@color/icon_color_settings" />
+    <Button
+        android:id="@+id/button_share"
+        style="@style/SettingsScreenButton"
+        android:text="@string/text_share"
+        app:icon="@drawable/ic_share_24"/>
 
-        <Button
-            android:id="@+id/button_library"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/text_support"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_settings"
-            android:gravity="start"
-            app:backgroundTint="@color/button_color"
-            app:icon="@drawable/support"
-            app:iconGravity="end"
-            app:iconPadding="@dimen/icon_padding"
-            app:iconSize="@dimen/icon_size"
-            app:iconTint="@color/icon_color_settings"
-            style="?android:attr/borderlessButtonStyle"
-            android:textAllCaps="false"
-            android:fontFamily="@font/roboto"/>
+    <Button
+        android:id="@+id/button_email"
+        style="@style/SettingsScreenButton"
+        android:text="@string/text_support"
+        app:icon="@drawable/ic_support_20" />
 
-        <Button
-            android:id="@+id/button_settings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/text_documents"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_settings"
-            android:gravity="start"
-            app:backgroundTint="@color/button_color"
-            app:icon="@drawable/documents"
-            app:iconGravity="end"
-            app:iconPadding="@dimen/icon_padding"
-            app:iconSize="@dimen/icon_size"
-            app:iconTint="@color/icon_color_settings"
-            style="?android:attr/borderlessButtonStyle"
-            android:textAllCaps="false"
-            android:fontFamily="@font/roboto"/>
+    <Button
+        android:id="@+id/button_practicum_offer"
+        style="@style/SettingsScreenButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_documents"
+        app:icon="@drawable/ic_documents_24"/>
 
 </LinearLayout>
