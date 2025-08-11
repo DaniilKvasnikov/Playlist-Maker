@@ -36,6 +36,7 @@ class SearchActivity : AppCompatActivity() {
             search.setText("")
             hideKeyboard(search)
         }
+        btnClear.visibility = View.GONE
         search.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 btnClear.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE

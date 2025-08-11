@@ -55,6 +55,7 @@
             android:contentDescription="@null"
             app:iconTint="@color/icon_color_settings"
             android:src="@drawable/clear"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            android:visibility="gone"/>
     </LinearLayout>
 </LinearLayout>
