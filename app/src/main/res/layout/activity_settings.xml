@@ -15,7 +15,7 @@
         android:layout_gravity="start"
         android:visibility="visible"
         android:fontFamily="@font/ys_display_regular"
-        app:navigationIcon="@drawable/back"
+        app:navigationIcon="@drawable/ic_back_16"
         app:title="@string/text_settings"
         app:titleTextAppearance="@style/HeaderTitleStyle"
         app:titleTextColor="@color/text_color_header_settings" />
@@ -32,13 +32,13 @@
         android:id="@+id/button_share"
         style="@style/SettingsScreenButton"
         android:text="@string/text_share"
-        app:icon="@drawable/share"/>
+        app:icon="@drawable/ic_share_24"/>
 
     <Button
         android:id="@+id/button_email"
         style="@style/SettingsScreenButton"
         android:text="@string/text_support"
-        app:icon="@drawable/support" />
+        app:icon="@drawable/ic_support_20" />
 
     <Button
         android:id="@+id/button_practicum_offer"
@@ -46,6 +46,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/text_documents"
-        app:icon="@drawable/documents"/>
+        app:icon="@drawable/ic_documents_24"/>
 
 </LinearLayout>
