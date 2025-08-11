@@ -17,45 +17,54 @@
         app:title="@string/text_search"
         app:titleTextAppearance="@style/HeaderTitleStyle"
         app:titleTextColor="@color/text_color_header_settings" />
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/searchContainer"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:layout_height="42dp"
         android:background="@drawable/rect_bg_search_container"
         android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="8dp"
         android:paddingHorizontal="12dp">
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_search_icon_18"
-            android:layout_marginEnd="8dp"
-            app:tint="@color/icon_color_search" />
-        <EditText
-            android:id="@+id/edittext_serach"
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:autofillHints=""
-            android:hint="@string/text_search_edittext"
-            android:textColorHint="@color/text_color_search"
-            android:inputType="text"
-            android:maxLines="1"
-            android:imeOptions="actionSearch"
-            android:background="@android:color/transparent"
-            android:textSize="16sp"
-            android:textColor="@color/text_color"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_search_icon_16"
+                android:layout_marginEnd="8dp"
+                app:tint="@color/icon_color_search" />
+
+            <EditText
+                android:id="@+id/edittext_serach"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:autofillHints=""
+                android:hint="@string/text_search_edittext"
+                android:textColorHint="@color/text_color_search"
+                android:inputType="text"
+                android:maxLines="1"
+                android:imeOptions="actionSearch"
+                android:background="@android:color/transparent"
+                android:textSize="16sp"
+                android:textColor="@color/text_color" />
+        </LinearLayout>
+
         <ImageButton
             android:id="@+id/button_clear"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_gravity="end|center_vertical"
             android:contentDescription="@null"
-            app:iconTint="@color/icon_color_settings"
             android:src="@drawable/ic_clear_24"
             android:background="@android:color/transparent"
+            app:tint="@color/text_color_search"
             android:visibility="gone"/>
-    </LinearLayout>
+    </FrameLayout>
 </LinearLayout>
