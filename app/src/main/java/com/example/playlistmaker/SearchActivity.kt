@@ -79,6 +79,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val STRING_INPUT = "STRING_INPUT"
+        private const val STRING_INPUT = "STRING_INPUT"
     }
 }
