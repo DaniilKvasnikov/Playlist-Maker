@@ -57,6 +57,6 @@
 
     <style name="item_track_image">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">2dp</item>
+        <item name="cornerSize">8dp</item>
     </style>
 </resources>

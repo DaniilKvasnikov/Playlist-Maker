@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 
 class TrackAdapter(private val items: List<Track>) :
     RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
@@ -36,6 +38,7 @@ class TrackAdapter(private val items: List<Track>) :
             durationView.text = track.trackTime
             Glide.with(itemView)
                 .load(track.artworkUrl100)
+                .apply(RequestOptions().transform(RoundedCorners(2)))
                 .placeholder(R.drawable.ic_placeholder_45)
                 .error(R.drawable.ic_placeholder_45)
                 .into(imageView)
