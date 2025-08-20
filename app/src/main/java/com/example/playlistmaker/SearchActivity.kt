@@ -2,8 +2,6 @@ package com.example.playlistmaker
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
@@ -35,7 +33,7 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
         val btnClear = findViewById<ImageButton>(R.id.button_clear)
-        search = findViewById<EditText>(R.id.edittext_serach)
+        search = findViewById(R.id.edittext_serach)
         btnClear.setOnClickListener {
             search.setText("")
             hideKeyboard(search)
