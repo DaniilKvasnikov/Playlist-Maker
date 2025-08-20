@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="61dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:foreground="?attr/selectableItemBackground"
     android:paddingStart="16dp"
     android:paddingEnd="16dp">
@@ -29,22 +30,28 @@
         android:layout_marginTop="16dp"
         android:ellipsize="end"
         android:maxLines="1"
+        android:scrollHorizontally="false"
+        android:singleLine="true"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/ivArtwork"
+        app:layout_constraintEnd_toStartOf="@+id/ivChevron"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/item_track_header"/>
+        android:textColor="@color/item_track_header"
+        tools:text="Hello my dear friend"/>
+
 
     <TextView
         android:id="@+id/tvSubtitle"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
         android:textSize="11sp"
         android:textColor="@color/item_track_info"
         app:layout_constraintStart_toStartOf="@+id/tvTitle"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        tools:text="Hello my dear friend"/>
 
     <ImageView
         android:id="@+id/ivChevron2"
@@ -65,7 +72,9 @@
         android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="@+id/tvSubtitle"
         app:layout_constraintStart_toEndOf="@+id/ivChevron2"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        tools:text="22:22"/>
+
 
     <ImageView
         android:id="@+id/ivChevron"
