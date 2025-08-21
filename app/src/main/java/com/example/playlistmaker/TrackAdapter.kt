@@ -38,10 +38,13 @@ class TrackAdapter(private val items: List<Track>) :
             durationView.text = track.trackTime
             Glide.with(itemView)
                 .load(track.artworkUrl100)
-                .apply(RequestOptions().transform(RoundedCorners(2)))
+                .apply(RequestOptions().transform(RoundedCorners(2.toPx(itemView))))
                 .placeholder(R.drawable.ic_placeholder_45)
                 .error(R.drawable.ic_placeholder_45)
                 .into(imageView)
+        }
+        fun Int.toPx(view: View): Int {
+            return (this * view.resources.displayMetrics.density).toInt()
         }
     }
 
