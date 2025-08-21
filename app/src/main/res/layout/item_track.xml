@@ -68,6 +68,7 @@
                 android:id="@+id/ivChevron2"
                 android:layout_width="13dp"
                 android:layout_height="13dp"
+                android:contentDescription="@null"
                 app:srcCompat="@drawable/ic_item_track_point_13"
                 app:tint="@color/item_track_info" />
 
