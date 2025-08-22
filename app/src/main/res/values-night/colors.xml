@@ -9,4 +9,6 @@
     <color name="icon_color_settings">#FFF</color>
     <color name="icon_color_search">#1A1B22</color>
     <color name="text_color_search">#1A1B22</color>
+    <color name="item_track_info">#FFFFFF</color>
+    <color name="item_track_header">#FFFFFF</color>
 </resources>

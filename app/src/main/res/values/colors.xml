@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#000000</color>
-    <color name="white">#FFFFFFFF</color>
     <color name="icon_color">#1A1B22</color>
     <color name="text_color_header">#FFFFFFFF</color>
     <color name="text_color">#1A1B22</color>
@@ -11,11 +9,12 @@
     <color name="background_settings">#FFF</color>
     <color name="text_color_header_settings">#000</color>
     <color name="icon_color_settings">#AEAFB4</color>
-    <color name="button_back">#1A1B22</color>
     <color name="button_back_settings">#1A1B22</color>
     <color name="DarkThemeSwitchColor">#3772E7</color>
     <color name="search_bg">#E6E8EB</color>
     <color name="icon_color_search">#AEAFB4</color>
     <color name="text_color_search">#AEAFB4</color>
+    <color name="item_track_info">#AEAFB4</color>
+    <color name="item_track_header">#000000</color>
 
 </resources>
