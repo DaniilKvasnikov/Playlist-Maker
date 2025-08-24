@@ -30,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
     private val api by lazy { retrofit.create(ITunesApiService::class.java) }
     private lateinit var search: EditText
     private var stringInput : String = ""
-    @SuppressLint("RestrictedApi")
+    @SuppressLint("RestrictedApi", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

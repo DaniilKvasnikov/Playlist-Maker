@@ -90,7 +90,8 @@
             android:gravity="top|center_horizontal"
             android:paddingTop="106dp"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:layout_width="120dp"
