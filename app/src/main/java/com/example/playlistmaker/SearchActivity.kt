@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.ViewUtils.hideKeyboard
 import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import java.util.Locale
@@ -55,7 +57,30 @@ class SearchActivity : AppCompatActivity() {
         }
         val emptyView = findViewById<View>(R.id.empty_placeholder)
         val recycleView = findViewById<RecyclerView>(R.id.recycler)
-
+        val errorView = findViewById<View>(R.id.error_placeholder)
+        val retryButton = findViewById<Button>(R.id.button_retry)
+        retryButton.setOnClickListener {
+            search.onEditorAction(EditorInfo.IME_ACTION_DONE)
+        }
+        fun showState(state: State) {
+            when (state) {
+                State.CONTENT -> {
+                    recycleView.isVisible = true
+                    emptyView.isVisible = false
+                    errorView.isVisible = false
+                }
+                State.EMPTY -> {
+                    recycleView.isVisible = false
+                    emptyView.isVisible = true
+                    errorView.isVisible = false
+                }
+                State.ERROR -> {
+                    recycleView.isVisible = false
+                    emptyView.isVisible = false
+                    errorView.isVisible = true
+                }
+            }
+        }
         val data = mutableListOf(
             Track("Smells Like Teen Spirit", "Nirvana", "5:01", "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
             Track("Billie Jean", "Michael Jackson", "4:35", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
@@ -63,11 +88,6 @@ class SearchActivity : AppCompatActivity() {
             Track("Whole Lotta Love", "Led Zeppelin", "5:33", "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"),
             Track("Sweet Child O'Mine", "Guns N' Roses", "5:03", "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg")
         )
-        fun updateEmptyState() {
-            emptyView.isVisible = data.isEmpty()
-            recycleView.isVisible = data.isNotEmpty()
-        }
-        updateEmptyState()
         recycleView.layoutManager = LinearLayoutManager(this)
         val adapter = TrackAdapter(data)
         recycleView.adapter = adapter
@@ -77,38 +97,37 @@ class SearchActivity : AppCompatActivity() {
 
                 api.getMusics(query).enqueue(object : retrofit2.Callback<ResponseBody> {
                     @SuppressLint("NotifyDataSetChanged")
-                    override fun onResponse(call: retrofit2.Call<ResponseBody>, response: Response<ResponseBody?>) {
-                        val body = response.body() ?: return
-                        val json = org.json.JSONObject(body.string())
-                        val results = json.getJSONArray("results")
-                        data.clear()
-                        for (i in 0 until results.length()) {
-                            val item = results.getJSONObject(i)
-
-                            val trackName = item.optString("trackName")
-                            val artistName = item.optString("artistName")
-                            val duration = formatMillis(item.optLong("trackTimeMillis"))
-                            val artwork = item.optString("artworkUrl100")
-
-                            data.add(Track(trackName, artistName, duration, artwork))
+                    override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
+                        if (response.isSuccessful && response.body() != null) {
+                            val json = org.json.JSONObject(response.body()!!.string())
+                            val results = json.getJSONArray("results")
+                            data.clear()
+                            for (i in 0 until results.length()) {
+                                val item = results.getJSONObject(i)
+                                val trackName = item.optString("trackName")
+                                val artistName = item.optString("artistName")
+                                val duration = formatMillis(item.optLong("trackTimeMillis"))
+                                val artwork = item.optString("artworkUrl100")
+                                data.add(Track(trackName, artistName, duration, artwork))
+                            }
+                            adapter.notifyDataSetChanged()
+                            showState(if (data.isEmpty()) State.EMPTY else State.CONTENT)
+                        } else {
+                            showState(State.ERROR)
                         }
-                        adapter.notifyDataSetChanged()
-                        updateEmptyState()
                     }
 
-                    @SuppressLint("NotifyDataSetChanged")
-                    override fun onFailure(call: retrofit2.Call<ResponseBody>, t: Throwable) {
-                        data.clear()
-                        adapter.notifyDataSetChanged()
-                        updateEmptyState()
+                    override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+                        showState(State.ERROR)
                     }
-
                 })
                 true
             }
             false
         }
     }
+
+    enum class State { CONTENT, EMPTY, ERROR }
     private fun formatMillis(ms: Long): String {
         if (ms <= 0L) return ""
         val totalSeconds = ms / 1000

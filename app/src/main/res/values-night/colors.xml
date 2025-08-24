@@ -13,4 +13,5 @@
     <color name="item_track_header">#FFFFFF</color>
     <color name="search_not_found_text_color">#FFFFFF</color>
     <color name="not_found_icon">#FFFFFF</color>
+    <color name="not_found_text_refresh">#1A1B22</color>
 </resources>
