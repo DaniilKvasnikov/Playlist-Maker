@@ -16,5 +16,7 @@
     <color name="text_color_search">#AEAFB4</color>
     <color name="item_track_info">#AEAFB4</color>
     <color name="item_track_header">#000000</color>
+    <color name="search_not_found_text_color">#1A1B22</color>
+    <color name="not_found_icon">#1A1B22</color>
 
 </resources>
