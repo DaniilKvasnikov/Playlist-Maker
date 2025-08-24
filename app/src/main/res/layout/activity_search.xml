@@ -51,10 +51,11 @@
                 android:textColorHint="@color/text_color_search"
                 android:inputType="text"
                 android:maxLines="1"
-                android:imeOptions="actionSearch"
                 android:background="@android:color/transparent"
                 android:textSize="16sp"
-                android:textColor="@color/text_color" />
+                android:textColor="@color/text_color"
+                android:imeOptions="actionDone"
+                android:singleLine="true"/>
         </LinearLayout>
 
         <ImageButton
@@ -69,11 +70,88 @@
             android:visibility="gone"/>
     </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:layout_marginTop="16dp"
-        tools:listitem="@layout/item_track"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            tools:listitem="@layout/item_track"/>
+
+        <LinearLayout
+            android:id="@+id/empty_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top|center_horizontal"
+            android:paddingTop="106dp"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:ignore="UseCompoundDrawables">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_empty_search_note_120"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_not_found"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="@color/search_not_found_text_color"
+                android:textSize="19sp"
+                android:fontFamily="@font/ys_display_regular"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/error_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top|center_horizontal"
+            android:orientation="vertical"
+            android:paddingTop="102dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_connection_error_120" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="24dp"
+                android:fontFamily="@font/ys_display_regular"
+                android:gravity="center"
+                android:text="@string/problems_with_connection"
+                android:textColor="@color/search_not_found_text_color"
+                android:textSize="19sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_retry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/not_found_icon"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="10dp"
+                android:text="@string/refresh_search"
+                android:textAllCaps="false"
+                android:textColor="@color/not_found_text_refresh"
+                android:textSize="14sp"
+                android:fontFamily="@font/ys_display_regular"
+                app:cornerRadius="54dp" />
+        </LinearLayout>
+
+    </FrameLayout>
+
 </LinearLayout>
