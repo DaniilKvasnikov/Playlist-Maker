@@ -51,10 +51,11 @@
                 android:textColorHint="@color/text_color_search"
                 android:inputType="text"
                 android:maxLines="1"
-                android:imeOptions="actionSearch"
                 android:background="@android:color/transparent"
                 android:textSize="16sp"
-                android:textColor="@color/text_color" />
+                android:textColor="@color/text_color"
+                android:imeOptions="actionDone"
+                android:singleLine="true"/>
         </LinearLayout>
 
         <ImageButton
