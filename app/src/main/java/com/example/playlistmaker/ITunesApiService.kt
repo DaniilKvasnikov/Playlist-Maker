@@ -7,5 +7,10 @@ import retrofit2.http.Query
 
 interface ITunesApiService {
     @GET("search?entity=song")
-    fun getMusics(@Query("term") text: String): Call<ResponseBody>
+    fun getMusics(@Query("term") text: String): Call<ITunesResponse>
 }
+
+data class ITunesResponse(
+    val resultCount: Int,
+    val results: List<Track>
+)

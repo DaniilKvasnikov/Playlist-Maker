@@ -17,15 +17,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.ViewUtils.hideKeyboard
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.util.Locale
+import retrofit2.Callback
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://itunes.apple.com/")
+        .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val api by lazy { retrofit.create(ITunesApiService::class.java) }
     private lateinit var search: EditText
@@ -86,21 +87,12 @@ class SearchActivity : AppCompatActivity() {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val query = s.text.toString()
 
-                api.getMusics(query).enqueue(object : retrofit2.Callback<ResponseBody> {
-                    @SuppressLint("NotifyDataSetChanged")
-                    override fun onResponse(call: Call<ResponseBody?>, response: Response<ResponseBody?>) {
-                        if (response.isSuccessful && response.body() != null) {
-                            val json = org.json.JSONObject(response.body()!!.string())
-                            val results = json.getJSONArray("results")
+                api.getMusics(query).enqueue(object : Callback<ITunesResponse> {
+                    override fun onResponse(call: Call<ITunesResponse>, response: Response<ITunesResponse>) {
+                        if (response.isSuccessful) {
+                            val body = response.body()
                             data.clear()
-                            for (i in 0 until results.length()) {
-                                val item = results.getJSONObject(i)
-                                val trackName = item.optString("trackName")
-                                val artistName = item.optString("artistName")
-                                val duration = formatMillis(item.optLong("trackTimeMillis"))
-                                val artwork = item.optString("artworkUrl100")
-                                data.add(Track(trackName, artistName, duration, artwork))
-                            }
+                            body?.results?.let { data.addAll(it) }
                             adapter.notifyDataSetChanged()
                             showState(if (data.isEmpty()) State.EMPTY else State.CONTENT)
                         } else {
@@ -108,7 +100,7 @@ class SearchActivity : AppCompatActivity() {
                         }
                     }
 
-                    override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+                    override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
                         showState(State.ERROR)
                     }
                 })
@@ -129,13 +121,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     enum class State { CONTENT, EMPTY, ERROR }
-    private fun formatMillis(ms: Long): String {
-        if (ms <= 0L) return ""
-        val totalSeconds = ms / 1000
-        val minutes = totalSeconds / 60
-        val seconds = totalSeconds % 60
-        return String.format(Locale.US, "%d:%02d", minutes, seconds)
-    }
     override fun onSaveInstanceState(
         outState: Bundle
     ) {
