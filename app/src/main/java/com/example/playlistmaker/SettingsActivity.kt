@@ -9,6 +9,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 import androidx.core.net.toUri
+import com.google.android.material.switchmaterial.SwitchMaterial
+import androidx.core.content.edit
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +37,16 @@ class SettingsActivity : AppCompatActivity() {
         val close = findViewById<MaterialToolbar>(R.id.panel_header)
         close.setOnClickListener {
             finish()
+        }
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.switch_theme)
+        themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
+            (applicationContext as App).switchTheme(isChecked)
+            
+            val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+            sharedPrefs.edit {
+                putBoolean("dark_theme", isChecked)
+            }
         }
     }
 
