@@ -21,12 +21,13 @@
         app:titleTextColor="@color/text_color_header_settings" />
 
 
-    <androidx.appcompat.widget.SwitchCompat
+    <com.google.android.material.switchmaterial.SwitchMaterial
         style="@style/DarkThemeSwitchStyle"
         android:id="@+id/switch_theme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_gravity="start"
         android:text="@string/dark_theme"/>
 
     <Button
