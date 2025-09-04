@@ -10,8 +10,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 
-class TrackAdapter(private val items: List<Track>) :
-    RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
+class TrackAdapter(
+    private val items: List<Track>,
+    private val onTrackClick: (Track) -> Unit = {}
+) : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
     override fun onCreateViewHolder( parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_track, parent, false)
@@ -20,6 +22,9 @@ class TrackAdapter(private val items: List<Track>) :
 
     override fun onBindViewHolder( holder: TrackViewHolder, position: Int ) {
         holder.bind(items[position])
+        holder.itemView.setOnClickListener {
+            onTrackClick(items[position])
+        }
     }
 
     override fun getItemCount(): Int {

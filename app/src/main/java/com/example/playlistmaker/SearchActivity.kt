@@ -31,11 +31,16 @@ class SearchActivity : AppCompatActivity() {
     private val api by lazy { retrofit.create(ITunesApiService::class.java) }
     private lateinit var search: EditText
     private var stringInput : String = ""
+    private lateinit var searchHistory: SearchHistory
+    private lateinit var historyAdapter: TrackAdapter
+    private val historyData = mutableListOf<Track>()
     @SuppressLint("RestrictedApi", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_search)
+        
+        searchHistory = SearchHistory(this)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -51,38 +56,57 @@ class SearchActivity : AppCompatActivity() {
         search.doOnTextChanged {s, _, _, _ ->
             btnClear.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
             stringInput = s.toString()
+            
+            if (s.isNullOrEmpty()) {
+                showHistoryIfNeeded()
+            } else {
+                hideAllViews()
+            }
         }
         val emptyView = findViewById<View>(R.id.empty_placeholder)
         val recycleView = findViewById<RecyclerView>(R.id.recycler)
         val errorView = findViewById<View>(R.id.error_placeholder)
+        val historyContainer = findViewById<View>(R.id.history_container)
+        val historyRecycler = findViewById<RecyclerView>(R.id.history_recycler)
+        val clearHistoryButton = findViewById<Button>(R.id.button_clear_history)
         val retryButton = findViewById<Button>(R.id.button_retry)
+        
         retryButton.setOnClickListener {
             search.onEditorAction(EditorInfo.IME_ACTION_DONE)
         }
-        fun showState(state: State) {
-            when (state) {
-                State.CONTENT -> {
-                    recycleView.isVisible = true
-                    emptyView.isVisible = false
-                    errorView.isVisible = false
-                }
-                State.EMPTY -> {
-                    recycleView.isVisible = false
-                    emptyView.isVisible = true
-                    errorView.isVisible = false
-                }
-                State.ERROR -> {
-                    recycleView.isVisible = false
-                    emptyView.isVisible = false
-                    errorView.isVisible = true
-                }
-            }
-        }
+        
+        
+        
         val data = mutableListOf<Track>()
 
         recycleView.layoutManager = LinearLayoutManager(this)
-        val adapter = TrackAdapter(data)
+        val adapter = TrackAdapter(data) { track ->
+            searchHistory.addTrack(track)
+        }
         recycleView.adapter = adapter
+        
+        // Настройка history recycler
+        historyRecycler.layoutManager = LinearLayoutManager(this)
+        historyAdapter = TrackAdapter(historyData) { track ->
+            searchHistory.addTrack(track)
+        }
+        historyRecycler.adapter = historyAdapter
+        
+        // Обработчик кнопки очистки истории
+        clearHistoryButton.setOnClickListener {
+            searchHistory.clearHistory()
+            updateHistory()
+            if (search.text.isEmpty() && search.hasFocus()) {
+                hideAllViews()
+            }
+        }
+        
+        // Обработчики фокуса для показа истории
+        search.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && search.text.isEmpty()) {
+                showHistoryIfNeeded()
+            }
+        }
         search.setOnEditorActionListener { s, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val query = s.text.toString()
@@ -113,14 +137,75 @@ class SearchActivity : AppCompatActivity() {
             hideKeyboard(search)
             data.clear()
             adapter.notifyDataSetChanged()
-            recycleView.isVisible = false
-            emptyView.isVisible = false
-            errorView.isVisible = false
+            hideAllViews()
             btnClear.visibility = View.GONE
+            showHistoryIfNeeded()
+        }
+    }
+    
+    private fun updateHistory() {
+        val history = searchHistory.getHistory()
+        historyData.clear()
+        historyData.addAll(history)
+        historyAdapter.notifyDataSetChanged()
+    }
+    
+    private fun showHistoryIfNeeded() {
+        if (search.text.isEmpty() && search.hasFocus()) {
+            updateHistory()
+            if (historyData.isNotEmpty()) {
+                showState(State.HISTORY)
+            }
+        }
+    }
+    
+    private fun hideAllViews() {
+        val recycleView = findViewById<RecyclerView>(R.id.recycler)
+        val emptyView = findViewById<View>(R.id.empty_placeholder)
+        val errorView = findViewById<View>(R.id.error_placeholder)
+        val historyContainer = findViewById<View>(R.id.history_container)
+        
+        recycleView.isVisible = false
+        emptyView.isVisible = false
+        errorView.isVisible = false
+        historyContainer.isVisible = false
+    }
+    
+    private fun showState(state: State) {
+        val recycleView = findViewById<RecyclerView>(R.id.recycler)
+        val emptyView = findViewById<View>(R.id.empty_placeholder)
+        val errorView = findViewById<View>(R.id.error_placeholder)
+        val historyContainer = findViewById<View>(R.id.history_container)
+        
+        when (state) {
+            State.CONTENT -> {
+                recycleView.isVisible = true
+                emptyView.isVisible = false
+                errorView.isVisible = false
+                historyContainer.isVisible = false
+            }
+            State.EMPTY -> {
+                recycleView.isVisible = false
+                emptyView.isVisible = true
+                errorView.isVisible = false
+                historyContainer.isVisible = false
+            }
+            State.ERROR -> {
+                recycleView.isVisible = false
+                emptyView.isVisible = false
+                errorView.isVisible = true
+                historyContainer.isVisible = false
+            }
+            State.HISTORY -> {
+                recycleView.isVisible = false
+                emptyView.isVisible = false
+                errorView.isVisible = false
+                historyContainer.isVisible = true
+            }
         }
     }
 
-    enum class State { CONTENT, EMPTY, ERROR }
+    enum class State { CONTENT, EMPTY, ERROR, HISTORY }
     override fun onSaveInstanceState(
         outState: Bundle
     ) {
