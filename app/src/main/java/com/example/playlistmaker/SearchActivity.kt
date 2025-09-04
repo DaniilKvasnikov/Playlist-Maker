@@ -12,6 +12,8 @@ import androidx.core.view.ViewCompat
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.view.marginTop
+import androidx.core.view.marginBottom
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -161,13 +163,26 @@ class SearchActivity : AppCompatActivity() {
     private fun updateButtonVisibility() {
         val clearHistoryButton = findViewById<Button>(R.id.button_clear_history)
         val clearHistoryInlineButton = findViewById<Button>(R.id.button_clear_history_inline)
+        val historyRecycler = findViewById<RecyclerView>(R.id.history_recycler)
+        val historyTitle = findViewById<View>(R.id.history_title)
+        val historyContainer = findViewById<View>(R.id.history_container)
 
-        if (historyData.size <= 3) {
-            clearHistoryInlineButton.isVisible = true
-            clearHistoryButton.isVisible = false
-        } else {
-            clearHistoryInlineButton.isVisible = false
-            clearHistoryButton.isVisible = true
+        historyContainer.post {
+            val containerHeight = historyContainer.height
+            val titleHeight = historyTitle.height
+            val buttonHeight = clearHistoryInlineButton.height + 
+                clearHistoryInlineButton.marginTop + clearHistoryInlineButton.marginBottom
+            val recyclerHeight = historyRecycler.height
+
+            val totalContentHeight = titleHeight + recyclerHeight + buttonHeight
+            
+            if (totalContentHeight <= containerHeight) {
+                clearHistoryInlineButton.isVisible = true
+                clearHistoryButton.isVisible = false
+            } else {
+                clearHistoryInlineButton.isVisible = false
+                clearHistoryButton.isVisible = true
+            }
         }
     }
     

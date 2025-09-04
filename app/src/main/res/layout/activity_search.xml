@@ -152,81 +152,89 @@
                 app:cornerRadius="54dp" />
         </LinearLayout>
 
-        <FrameLayout
+        <LinearLayout
             android:id="@+id/history_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             android:visibility="gone">
 
-            <ScrollView
+            <TextView
+                android:id="@+id/history_title"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="88dp">
-
-                    <TextView
-                        android:id="@+id/history_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="16dp"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginBottom="20dp"
-                        android:text="@string/search_history_title"
-                        android:textSize="19sp"
-                        android:textColor="@color/text_color"
-                        android:fontFamily="@font/ys_display_regular"
-                        android:gravity="center"/>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/history_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clipToPadding="false"
-                        android:nestedScrollingEnabled="false"
-                        tools:listitem="@layout/item_track"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/button_clear_history_inline"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginBottom="24dp"
-                        android:backgroundTint="@color/not_found_icon"
-                        android:paddingHorizontal="14dp"
-                        android:paddingVertical="10dp"
-                        android:text="@string/clear_history"
-                        android:textAllCaps="false"
-                        android:textColor="@color/not_found_text_refresh"
-                        android:textSize="14sp"
-                        android:fontFamily="@font/ys_display_regular"
-                        app:cornerRadius="54dp" />
-
-                </LinearLayout>
-
-            </ScrollView>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_clear_history"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginBottom="24dp"
-                android:backgroundTint="@color/not_found_icon"
-                android:paddingHorizontal="14dp"
-                android:paddingVertical="10dp"
-                android:text="@string/clear_history"
-                android:textAllCaps="false"
-                android:textColor="@color/not_found_text_refresh"
-                android:textSize="14sp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/search_history_title"
+                android:textSize="19sp"
+                android:textColor="@color/text_color"
                 android:fontFamily="@font/ys_display_regular"
-                app:cornerRadius="54dp" />
+                android:gravity="center"/>
 
-        </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="88dp">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/history_recycler"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clipToPadding="false"
+                            android:nestedScrollingEnabled="false"
+                            tools:listitem="@layout/item_track"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_clear_history_inline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="24dp"
+                            android:layout_marginBottom="24dp"
+                            android:backgroundTint="@color/not_found_icon"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="10dp"
+                            android:text="@string/clear_history"
+                            android:textAllCaps="false"
+                            android:textColor="@color/not_found_text_refresh"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/ys_display_regular"
+                            app:cornerRadius="54dp" />
+
+                    </LinearLayout>
+
+                </ScrollView>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_clear_history"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="24dp"
+                    android:backgroundTint="@color/not_found_icon"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="10dp"
+                    android:text="@string/clear_history"
+                    android:textAllCaps="false"
+                    android:textColor="@color/not_found_text_refresh"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/ys_display_regular"
+                    app:cornerRadius="54dp" />
+
+            </FrameLayout>
+
+        </LinearLayout>
 
     </FrameLayout>
 
