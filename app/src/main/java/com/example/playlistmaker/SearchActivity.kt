@@ -36,6 +36,15 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistory: SearchHistory
     private lateinit var historyAdapter: TrackAdapter
     private val historyData = mutableListOf<Track>()
+
+    private lateinit var emptyView: View
+    private lateinit var recycleView: RecyclerView
+    private lateinit var errorView: View
+    private lateinit var historyContainer: View
+    private lateinit var historyRecycler: RecyclerView
+    private lateinit var historyTitle: View
+    private lateinit var clearHistoryButton: Button
+    private lateinit var clearHistoryInlineButton: Button
     @SuppressLint("RestrictedApi", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,13 +74,15 @@ class SearchActivity : AppCompatActivity() {
                 hideAllViews()
             }
         }
-        val emptyView = findViewById<View>(R.id.empty_placeholder)
-        val recycleView = findViewById<RecyclerView>(R.id.recycler)
-        val errorView = findViewById<View>(R.id.error_placeholder)
-        val historyContainer = findViewById<View>(R.id.history_container)
-        val historyRecycler = findViewById<RecyclerView>(R.id.history_recycler)
-        val clearHistoryButton = findViewById<Button>(R.id.button_clear_history)
-        val clearHistoryInlineButton = findViewById<Button>(R.id.button_clear_history_inline)
+
+        emptyView = findViewById(R.id.empty_placeholder)
+        recycleView = findViewById(R.id.recycler)
+        errorView = findViewById(R.id.error_placeholder)
+        historyContainer = findViewById(R.id.history_container)
+        historyRecycler = findViewById(R.id.history_recycler)
+        historyTitle = findViewById(R.id.history_title)
+        clearHistoryButton = findViewById(R.id.button_clear_history)
+        clearHistoryInlineButton = findViewById(R.id.button_clear_history_inline)
         val retryButton = findViewById<Button>(R.id.button_retry)
         
         retryButton.setOnClickListener {
@@ -87,8 +98,7 @@ class SearchActivity : AppCompatActivity() {
             searchHistory.addTrack(track)
         }
         recycleView.adapter = adapter
-        
-        // Настройка history recycler
+
         historyRecycler.layoutManager = LinearLayoutManager(this)
         historyAdapter = TrackAdapter(historyData) { track ->
             searchHistory.addTrack(track)
@@ -161,12 +171,6 @@ class SearchActivity : AppCompatActivity() {
     }
     
     private fun updateButtonVisibility() {
-        val clearHistoryButton = findViewById<Button>(R.id.button_clear_history)
-        val clearHistoryInlineButton = findViewById<Button>(R.id.button_clear_history_inline)
-        val historyRecycler = findViewById<RecyclerView>(R.id.history_recycler)
-        val historyTitle = findViewById<View>(R.id.history_title)
-        val historyContainer = findViewById<View>(R.id.history_container)
-
         historyContainer.post {
             val containerHeight = historyContainer.height
             val titleHeight = historyTitle.height
@@ -196,11 +200,6 @@ class SearchActivity : AppCompatActivity() {
     }
     
     private fun hideAllViews() {
-        val recycleView = findViewById<RecyclerView>(R.id.recycler)
-        val emptyView = findViewById<View>(R.id.empty_placeholder)
-        val errorView = findViewById<View>(R.id.error_placeholder)
-        val historyContainer = findViewById<View>(R.id.history_container)
-        
         recycleView.isVisible = false
         emptyView.isVisible = false
         errorView.isVisible = false
@@ -208,11 +207,6 @@ class SearchActivity : AppCompatActivity() {
     }
     
     private fun showState(state: State) {
-        val recycleView = findViewById<RecyclerView>(R.id.recycler)
-        val emptyView = findViewById<View>(R.id.empty_placeholder)
-        val errorView = findViewById<View>(R.id.error_placeholder)
-        val historyContainer = findViewById<View>(R.id.history_container)
-        
         when (state) {
             State.CONTENT -> {
                 recycleView.isVisible = true
