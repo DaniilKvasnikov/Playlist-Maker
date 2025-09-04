@@ -69,6 +69,7 @@ class SearchActivity : AppCompatActivity() {
         val historyContainer = findViewById<View>(R.id.history_container)
         val historyRecycler = findViewById<RecyclerView>(R.id.history_recycler)
         val clearHistoryButton = findViewById<Button>(R.id.button_clear_history)
+        val clearHistoryInlineButton = findViewById<Button>(R.id.button_clear_history_inline)
         val retryButton = findViewById<Button>(R.id.button_retry)
         
         retryButton.setOnClickListener {
@@ -91,8 +92,7 @@ class SearchActivity : AppCompatActivity() {
             searchHistory.addTrack(track)
         }
         historyRecycler.adapter = historyAdapter
-        
-        // Обработчик кнопки очистки истории
+
         clearHistoryButton.setOnClickListener {
             searchHistory.clearHistory()
             updateHistory()
@@ -100,8 +100,15 @@ class SearchActivity : AppCompatActivity() {
                 hideAllViews()
             }
         }
-        
-        // Обработчики фокуса для показа истории
+
+        clearHistoryInlineButton.setOnClickListener {
+            searchHistory.clearHistory()
+            updateHistory()
+            if (search.text.isEmpty() && search.hasFocus()) {
+                hideAllViews()
+            }
+        }
+
         search.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && search.text.isEmpty()) {
                 showHistoryIfNeeded()
@@ -148,6 +155,20 @@ class SearchActivity : AppCompatActivity() {
         historyData.clear()
         historyData.addAll(history)
         historyAdapter.notifyDataSetChanged()
+        updateButtonVisibility()
+    }
+    
+    private fun updateButtonVisibility() {
+        val clearHistoryButton = findViewById<Button>(R.id.button_clear_history)
+        val clearHistoryInlineButton = findViewById<Button>(R.id.button_clear_history_inline)
+
+        if (historyData.size <= 3) {
+            clearHistoryInlineButton.isVisible = true
+            clearHistoryButton.isVisible = false
+        } else {
+            clearHistoryInlineButton.isVisible = false
+            clearHistoryButton.isVisible = true
+        }
     }
     
     private fun showHistoryIfNeeded() {
