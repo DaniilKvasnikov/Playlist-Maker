@@ -84,13 +84,10 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton = findViewById(R.id.button_clear_history)
         clearHistoryInlineButton = findViewById(R.id.button_clear_history_inline)
         val retryButton = findViewById<Button>(R.id.button_retry)
-        
         retryButton.setOnClickListener {
             search.onEditorAction(EditorInfo.IME_ACTION_DONE)
         }
-        
-        
-        
+
         val data = mutableListOf<Track>()
 
         recycleView.layoutManager = LinearLayoutManager(this)
@@ -122,9 +119,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         search.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus && search.text.isEmpty()) {
-                showHistoryIfNeeded()
-            }
+            showHistoryIfNeeded()
         }
         search.setOnEditorActionListener { s, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
