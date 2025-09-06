@@ -71,7 +71,7 @@ class SearchActivity : AppCompatActivity() {
             if (s.isNullOrEmpty()) {
                 showHistoryIfNeeded()
             } else {
-                hideAllViews()
+                showState(State.NONE)
             }
         }
 
@@ -109,7 +109,7 @@ class SearchActivity : AppCompatActivity() {
             searchHistory.clearHistory()
             updateHistory()
             if (search.text.isEmpty() && search.hasFocus()) {
-                hideAllViews()
+                showState(State.NONE)
             }
         }
 
@@ -117,7 +117,7 @@ class SearchActivity : AppCompatActivity() {
             searchHistory.clearHistory()
             updateHistory()
             if (search.text.isEmpty() && search.hasFocus()) {
-                hideAllViews()
+                showState(State.NONE)
             }
         }
 
@@ -156,7 +156,7 @@ class SearchActivity : AppCompatActivity() {
             hideKeyboard(search)
             data.clear()
             adapter.notifyDataSetChanged()
-            hideAllViews()
+            showState(State.NONE)
             btnClear.visibility = View.GONE
             showHistoryIfNeeded()
         }
@@ -199,13 +199,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
     
-    private fun hideAllViews() {
-        recycleView.isVisible = false
-        emptyView.isVisible = false
-        errorView.isVisible = false
-        historyContainer.isVisible = false
-    }
-    
     private fun showState(state: State) {
         recycleView.isVisible = (state == State.CONTENT)
         emptyView.isVisible = (state == State.EMPTY)
@@ -213,7 +206,7 @@ class SearchActivity : AppCompatActivity() {
         historyContainer.isVisible = (state == State.HISTORY)
     }
 
-    enum class State { CONTENT, EMPTY, ERROR, HISTORY }
+    enum class State { CONTENT, EMPTY, ERROR, HISTORY, NONE }
     override fun onSaveInstanceState(
         outState: Bundle
     ) {
