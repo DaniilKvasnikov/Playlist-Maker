@@ -207,32 +207,10 @@ class SearchActivity : AppCompatActivity() {
     }
     
     private fun showState(state: State) {
-        when (state) {
-            State.CONTENT -> {
-                recycleView.isVisible = true
-                emptyView.isVisible = false
-                errorView.isVisible = false
-                historyContainer.isVisible = false
-            }
-            State.EMPTY -> {
-                recycleView.isVisible = false
-                emptyView.isVisible = true
-                errorView.isVisible = false
-                historyContainer.isVisible = false
-            }
-            State.ERROR -> {
-                recycleView.isVisible = false
-                emptyView.isVisible = false
-                errorView.isVisible = true
-                historyContainer.isVisible = false
-            }
-            State.HISTORY -> {
-                recycleView.isVisible = false
-                emptyView.isVisible = false
-                errorView.isVisible = false
-                historyContainer.isVisible = true
-            }
-        }
+        recycleView.isVisible = (state == State.CONTENT)
+        emptyView.isVisible = (state == State.EMPTY)
+        errorView.isVisible = (state == State.ERROR)
+        historyContainer.isVisible = (state == State.HISTORY)
     }
 
     enum class State { CONTENT, EMPTY, ERROR, HISTORY }
