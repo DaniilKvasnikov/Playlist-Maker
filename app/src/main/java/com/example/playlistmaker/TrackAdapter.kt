@@ -10,8 +10,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 
-class TrackAdapter(private val items: List<Track>) :
-    RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
+class TrackAdapter(
+    private val items: List<Track>,
+    private val onTrackClick: (Track) -> Unit = {}
+) : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
     override fun onCreateViewHolder( parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_track, parent, false)
@@ -20,6 +22,9 @@ class TrackAdapter(private val items: List<Track>) :
 
     override fun onBindViewHolder( holder: TrackViewHolder, position: Int ) {
         holder.bind(items[position])
+        holder.itemView.setOnClickListener {
+            onTrackClick(items[position])
+        }
     }
 
     override fun getItemCount(): Int {
@@ -31,11 +36,24 @@ class TrackAdapter(private val items: List<Track>) :
         val infoView: TextView = itemView.findViewById(R.id.tvSubtitle)
         val durationView: TextView = itemView.findViewById(R.id.tvDuration)
         val imageView: ImageView = itemView.findViewById(R.id.ivArtwork)
+        val chevronView: ImageView = itemView.findViewById(R.id.ivChevron2)
 
         fun bind(track: Track) {
             headerView.text = track.trackName
             infoView.text = track.artistName
             durationView.text = track.trackTime
+
+            itemView.post {
+                val containerWidth = headerView.width
+                val chevronWidth = chevronView.width
+                val durationWidth = durationView.width
+                val maxWidth = containerWidth - chevronWidth - durationWidth
+                
+                if (maxWidth > 0) {
+                    infoView.maxWidth = maxWidth
+                }
+            }
+            
             Glide.with(itemView)
                 .load(track.artworkUrl100)
                 .apply(RequestOptions().transform(RoundedCorners(2.toPx(itemView))))

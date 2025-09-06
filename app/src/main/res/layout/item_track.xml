@@ -55,6 +55,7 @@
             <TextView
                 android:id="@+id/tvSubtitle"
                 android:layout_width="wrap_content"
+                android:maxWidth="100dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:fontFamily="@font/ys_display_regular"
