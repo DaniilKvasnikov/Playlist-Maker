@@ -36,11 +36,24 @@ class TrackAdapter(
         val infoView: TextView = itemView.findViewById(R.id.tvSubtitle)
         val durationView: TextView = itemView.findViewById(R.id.tvDuration)
         val imageView: ImageView = itemView.findViewById(R.id.ivArtwork)
+        val chevronView: ImageView = itemView.findViewById(R.id.ivChevron2)
 
         fun bind(track: Track) {
             headerView.text = track.trackName
             infoView.text = track.artistName
             durationView.text = track.trackTime
+
+            itemView.post {
+                val containerWidth = headerView.width
+                val chevronWidth = chevronView.width
+                val durationWidth = durationView.width
+                val maxWidth = containerWidth - chevronWidth - durationWidth
+                
+                if (maxWidth > 0) {
+                    infoView.maxWidth = maxWidth
+                }
+            }
+            
             Glide.with(itemView)
                 .load(track.artworkUrl100)
                 .apply(RequestOptions().transform(RoundedCorners(2.toPx(itemView))))
