@@ -62,7 +62,7 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
         val btnClear = findViewById<ImageButton>(R.id.button_clear)
-        search = findViewById(R.id.edittext_serach)
+        search = findViewById(R.id.edittext_search)
         btnClear.visibility = View.GONE
         search.doOnTextChanged {s, _, _, _ ->
             btnClear.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
