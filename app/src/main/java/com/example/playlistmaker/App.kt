@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
 
-const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
 class App : Application() {
   
    var darkTheme = false
@@ -13,7 +12,7 @@ class App : Application() {
    override fun onCreate() {
        super.onCreate()
        
-       darkTheme = sharedPreferences.getBoolean("dark_theme", false)
+       darkTheme = sharedPreferences.getBoolean(DARK_THEME_KEY, false)
        switchTheme(darkTheme)
    }
    
@@ -26,6 +25,11 @@ class App : Application() {
                AppCompatDelegate.MODE_NIGHT_NO
            }
        )
-       sharedPreferences.edit { putBoolean("dark_theme", darkThemeEnabled) }
+       sharedPreferences.edit { putBoolean(DARK_THEME_KEY, darkThemeEnabled) }
    }
+
+    companion object {
+        const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
+        const val DARK_THEME_KEY = "dark_theme"
+    }
 }
