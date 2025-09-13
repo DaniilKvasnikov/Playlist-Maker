@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -93,12 +94,14 @@ class SearchActivity : AppCompatActivity() {
         recycleView.layoutManager = LinearLayoutManager(this)
         val adapter = TrackAdapter(data) { track ->
             searchHistory.addTrack(track)
+            openAudioPlayer(track)
         }
         recycleView.adapter = adapter
 
         historyRecycler.layoutManager = LinearLayoutManager(this)
         historyAdapter = TrackAdapter(historyData) { track ->
             searchHistory.addTrack(track)
+            openAudioPlayer(track)
         }
         historyRecycler.adapter = historyAdapter
 
@@ -213,6 +216,12 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         stringInput = savedInstanceState.getString(STRING_INPUT, "")
         search.setText(stringInput)
+    }
+
+    private fun openAudioPlayer(track: Track) {
+        val intent = Intent(this, AudioPlayerActivity::class.java)
+        intent.putExtra("TRACK", track)
+        startActivity(intent)
     }
 
     companion object {
