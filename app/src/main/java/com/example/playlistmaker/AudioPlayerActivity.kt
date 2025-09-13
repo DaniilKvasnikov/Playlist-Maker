@@ -59,7 +59,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        val track = intent.getSerializableExtra("TRACK") as? Track
+        @Suppress("DEPRECATION") val track = intent.getSerializableExtra("TRACK") as? Track
         track?.let { displayTrackInfo(it) }
     }
 
@@ -100,7 +100,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             val date = inputFormat.parse(releaseDate)
             val outputFormat = SimpleDateFormat("yyyy", Locale.getDefault())
             outputFormat.format(date!!)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             releaseDate.substring(0, 4)
         }
     }
