@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 import java.util.Locale
 
 data class Track(
@@ -22,7 +23,7 @@ data class Track(
     val primaryGenreName: String,
     @SerializedName("country")
     val country: String
-) {
+) : Serializable {
     val trackTime: String
         get() = formatMillis(trackTimeMillis)
 
