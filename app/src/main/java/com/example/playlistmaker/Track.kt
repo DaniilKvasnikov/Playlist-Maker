@@ -1,8 +1,11 @@
 package com.example.playlistmaker
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
+@Parcelize
 data class Track(
     @SerializedName("trackId")
     val trackId: Int,
@@ -13,8 +16,16 @@ data class Track(
     @SerializedName("trackTimeMillis")
     private val trackTimeMillis: Long,
     @SerializedName("artworkUrl100")
-    val artworkUrl100: String
-) {
+    val artworkUrl100: String,
+    @SerializedName("collectionName")
+    val collectionName: String?,
+    @SerializedName("releaseDate")
+    val releaseDate: String?,
+    @SerializedName("primaryGenreName")
+    val primaryGenreName: String,
+    @SerializedName("country")
+    val country: String
+) : Parcelable {
     val trackTime: String
         get() = formatMillis(trackTimeMillis)
 
