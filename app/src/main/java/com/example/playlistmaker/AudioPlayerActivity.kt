@@ -59,7 +59,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        @Suppress("DEPRECATION") val track = intent.getSerializableExtra(TRACK_KEY) as? Track
+        val track = intent.getParcelableExtra<Track>(TRACK_KEY)
         track?.let { displayTrackInfo(it) }
     }
 
