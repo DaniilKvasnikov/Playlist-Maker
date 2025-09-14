@@ -59,7 +59,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        @Suppress("DEPRECATION") val track = intent.getSerializableExtra("TRACK") as? Track
+        @Suppress("DEPRECATION") val track = intent.getSerializableExtra(TRACK_KEY) as? Track
         track?.let { displayTrackInfo(it) }
     }
 
@@ -107,5 +107,9 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private fun Int.toPx(): Int {
         return (this * resources.displayMetrics.density).toInt()
+    }
+
+    companion object {
+        const val TRACK_KEY = "TRACK"
     }
 }
