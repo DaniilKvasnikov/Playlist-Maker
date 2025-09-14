@@ -1,5 +1,6 @@
 package com.example.playlistmaker
 
+import android.os.Build
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -59,7 +60,12 @@ class AudioPlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        val track = intent.getParcelableExtra<Track>(TRACK_KEY)
+        val track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(TRACK_KEY, Track::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra(TRACK_KEY)
+        }
         track?.let { displayTrackInfo(it) }
     }
 
