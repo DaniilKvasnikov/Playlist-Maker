@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +50,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var historyTitle: View
     private lateinit var clearHistoryButton: Button
     private lateinit var clearHistoryInlineButton: Button
+    private lateinit var progressBar: ProgressBar
 
     private val searchHandler = Handler(Looper.getMainLooper())
     private var searchRunnable: Runnable? = null
@@ -96,6 +98,7 @@ class SearchActivity : AppCompatActivity() {
         historyTitle = findViewById(R.id.history_title)
         clearHistoryButton = findViewById(R.id.button_clear_history)
         clearHistoryInlineButton = findViewById(R.id.button_clear_history_inline)
+        progressBar = findViewById(R.id.progress_bar)
         val retryButton = findViewById<Button>(R.id.button_retry)
         retryButton.setOnClickListener {
             search.onEditorAction(EditorInfo.IME_ACTION_DONE)
@@ -156,6 +159,8 @@ class SearchActivity : AppCompatActivity() {
 
     private fun performSearch(query: String) {
         if (query.isBlank()) return
+
+        showState(State.LOADING)
 
         api.getMusics(query).enqueue(object : Callback<ITunesResponse> {
             override fun onResponse(call: Call<ITunesResponse>, response: Response<ITunesResponse>) {
@@ -218,9 +223,10 @@ class SearchActivity : AppCompatActivity() {
         emptyView.isVisible = (state == State.EMPTY)
         errorView.isVisible = (state == State.ERROR)
         historyContainer.isVisible = (state == State.HISTORY)
+        progressBar.isVisible = (state == State.LOADING)
     }
 
-    enum class State { CONTENT, EMPTY, ERROR, HISTORY, NONE }
+    enum class State { CONTENT, EMPTY, ERROR, HISTORY, NONE, LOADING }
     override fun onSaveInstanceState(
         outState: Bundle
     ) {
