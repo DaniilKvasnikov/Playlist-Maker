@@ -1,7 +1,10 @@
 package com.example.playlistmaker
 
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -31,6 +34,11 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var yearValue: TextView
     private lateinit var genreValue: TextView
     private lateinit var countryValue: TextView
+
+    private var mediaPlayer: MediaPlayer? = null
+    private var isPlaying = false
+    private val handler = Handler(Looper.getMainLooper())
+    private var updateTimeRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +74,10 @@ class AudioPlayerActivity : AppCompatActivity() {
             @Suppress("DEPRECATION")
             intent.getParcelableExtra(TRACK_KEY)
         }
-        track?.let { displayTrackInfo(it) }
+        track?.let {
+            displayTrackInfo(it)
+            setupAudioPlayer(it)
+        }
     }
 
     private fun displayTrackInfo(track: Track) {
@@ -111,8 +122,103 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupAudioPlayer(track: Track) {
+        playButton.setOnClickListener {
+            if (isPlaying) {
+                pausePlayer()
+            } else {
+                playPlayer(track.previewUrl)
+            }
+        }
+    }
+
+    private fun playPlayer(url: String) {
+        try {
+            if (mediaPlayer == null) {
+                mediaPlayer = MediaPlayer().apply {
+                    setDataSource(url)
+                    prepareAsync()
+                    setOnPreparedListener {
+                        start()
+                        this@AudioPlayerActivity.isPlaying = true
+                        updatePlayButton()
+                        startUpdatingTime()
+                    }
+                    setOnCompletionListener {
+                        stopPlayer()
+                    }
+                }
+            } else {
+                mediaPlayer?.start()
+                isPlaying = true
+                updatePlayButton()
+                startUpdatingTime()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer?.pause()
+        isPlaying = false
+        updatePlayButton()
+        stopUpdatingTime()
+    }
+
+    private fun stopPlayer() {
+        mediaPlayer?.stop()
+        mediaPlayer?.release()
+        mediaPlayer = null
+        isPlaying = false
+        updatePlayButton()
+        stopUpdatingTime()
+        playTime.text = getString(R.string.default_playTime)
+    }
+
+    private fun updatePlayButton() {
+        val iconRes = if (isPlaying) {
+            R.drawable.ic_pause_button_84
+        } else {
+            R.drawable.ic_play_button_100
+        }
+        playButton.setImageResource(iconRes)
+    }
+
+    private fun startUpdatingTime() {
+        updateTimeRunnable = object : Runnable {
+            override fun run() {
+                mediaPlayer?.let { mp ->
+                    if (mp.isPlaying) {
+                        val currentPosition = mp.currentPosition
+                        playTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(currentPosition.toLong())
+                        handler.postDelayed(this, 500)
+                    }
+                }
+            }
+        }
+        handler.post(updateTimeRunnable!!)
+    }
+
+    private fun stopUpdatingTime() {
+        updateTimeRunnable?.let { handler.removeCallbacks(it) }
+        updateTimeRunnable = null
+    }
+
     private fun Int.toPx(): Int {
         return (this * resources.displayMetrics.density).toInt()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopUpdatingTime()
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 
     companion object {
