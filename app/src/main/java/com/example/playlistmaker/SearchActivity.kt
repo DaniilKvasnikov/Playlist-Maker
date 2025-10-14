@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -28,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://itunes.apple.com/")
+        .baseUrl(ITUNES_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val api by lazy { retrofit.create(ITunesApiService::class.java) }
@@ -37,6 +39,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistory: SearchHistory
     private lateinit var historyAdapter: TrackAdapter
     private val historyData = mutableListOf<Track>()
+    private val data = mutableListOf<Track>()
 
     private lateinit var emptyView: View
     private lateinit var recycleView: RecyclerView
@@ -46,6 +49,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var historyTitle: View
     private lateinit var clearHistoryButton: Button
     private lateinit var clearHistoryInlineButton: Button
+
+    private val searchHandler = Handler(Looper.getMainLooper())
+    private var searchRunnable: Runnable? = null
     @SuppressLint("RestrictedApi", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,11 +74,17 @@ class SearchActivity : AppCompatActivity() {
         search.doOnTextChanged {s, _, _, _ ->
             btnClear.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
             stringInput = s.toString()
-            
+
+            searchRunnable?.let { searchHandler.removeCallbacks(it) }
+
             if (s.isNullOrEmpty()) {
                 showHistoryIfNeeded()
             } else {
                 showState(State.NONE)
+                searchRunnable = Runnable {
+                    performSearch(s.toString())
+                }
+                searchHandler.postDelayed(searchRunnable!!, SEARCH_DEBOUNCE_DELAY)
             }
         }
 
@@ -88,8 +100,6 @@ class SearchActivity : AppCompatActivity() {
         retryButton.setOnClickListener {
             search.onEditorAction(EditorInfo.IME_ACTION_DONE)
         }
-
-        val data = mutableListOf<Track>()
 
         recycleView.layoutManager = LinearLayoutManager(this)
         val adapter = TrackAdapter(data) { track ->
@@ -126,30 +136,14 @@ class SearchActivity : AppCompatActivity() {
         }
         search.setOnEditorActionListener { s, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val query = s.text.toString()
-
-                api.getMusics(query).enqueue(object : Callback<ITunesResponse> {
-                    override fun onResponse(call: Call<ITunesResponse>, response: Response<ITunesResponse>) {
-                        if (response.isSuccessful) {
-                            val body = response.body()
-                            data.clear()
-                            body?.results?.let { data.addAll(it) }
-                            adapter.notifyDataSetChanged()
-                            showState(if (data.isEmpty()) State.EMPTY else State.CONTENT)
-                        } else {
-                            showState(State.ERROR)
-                        }
-                    }
-
-                    override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
-                        showState(State.ERROR)
-                    }
-                })
+                searchRunnable?.let { searchHandler.removeCallbacks(it) }
+                performSearch(s.text.toString())
                 true
             }
             false
         }
         btnClear.setOnClickListener {
+            searchRunnable?.let { searchHandler.removeCallbacks(it) }
             search.setText("")
             hideKeyboard(search)
             data.clear()
@@ -159,7 +153,29 @@ class SearchActivity : AppCompatActivity() {
             showHistoryIfNeeded()
         }
     }
-    
+
+    private fun performSearch(query: String) {
+        if (query.isBlank()) return
+
+        api.getMusics(query).enqueue(object : Callback<ITunesResponse> {
+            override fun onResponse(call: Call<ITunesResponse>, response: Response<ITunesResponse>) {
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    data.clear()
+                    body?.results?.let { data.addAll(it) }
+                    (recycleView.adapter as TrackAdapter).notifyDataSetChanged()
+                    showState(if (data.isEmpty()) State.EMPTY else State.CONTENT)
+                } else {
+                    showState(State.ERROR)
+                }
+            }
+
+            override fun onFailure(call: Call<ITunesResponse>, t: Throwable) {
+                showState(State.ERROR)
+            }
+        })
+    }
+
     private fun updateHistory() {
         val history = searchHistory.getHistory()
         historyData.clear()
@@ -224,7 +240,14 @@ class SearchActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    override fun onDestroy() {
+        searchRunnable?.let { searchHandler.removeCallbacks(it) }
+        super.onDestroy()
+    }
+
     companion object {
         private const val STRING_INPUT = "STRING_INPUT"
+        private const val ITUNES_URL = "https://itunes.apple.com/"
+        private val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }
