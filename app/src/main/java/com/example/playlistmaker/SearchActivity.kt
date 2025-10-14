@@ -54,6 +54,7 @@ class SearchActivity : AppCompatActivity() {
 
     private val searchHandler = Handler(Looper.getMainLooper())
     private var searchRunnable: Runnable? = null
+    private var lastClickTime = 0L
     @SuppressLint("RestrictedApi", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,15 +107,19 @@ class SearchActivity : AppCompatActivity() {
 
         recycleView.layoutManager = LinearLayoutManager(this)
         val adapter = TrackAdapter(data) { track ->
-            searchHistory.addTrack(track)
-            openAudioPlayer(track)
+            if (isClickAllowed()) {
+                searchHistory.addTrack(track)
+                openAudioPlayer(track)
+            }
         }
         recycleView.adapter = adapter
 
         historyRecycler.layoutManager = LinearLayoutManager(this)
         historyAdapter = TrackAdapter(historyData) { track ->
-            searchHistory.addTrack(track)
-            openAudioPlayer(track)
+            if (isClickAllowed()) {
+                searchHistory.addTrack(track)
+                openAudioPlayer(track)
+            }
         }
         historyRecycler.adapter = historyAdapter
 
@@ -240,6 +245,15 @@ class SearchActivity : AppCompatActivity() {
         search.setText(stringInput)
     }
 
+    private fun isClickAllowed(): Boolean {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastClickTime < CLICK_DEBOUNCE_DELAY) {
+            return false
+        }
+        lastClickTime = currentTime
+        return true
+    }
+
     private fun openAudioPlayer(track: Track) {
         val intent = Intent(this, AudioPlayerActivity::class.java)
         intent.putExtra(AudioPlayerActivity.TRACK_KEY, track)
@@ -254,6 +268,7 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         private const val STRING_INPUT = "STRING_INPUT"
         private const val ITUNES_URL = "https://itunes.apple.com/"
-        private val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 500L
     }
 }
