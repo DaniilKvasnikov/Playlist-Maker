@@ -39,6 +39,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     private var isPlaying = false
     private val handler = Handler(Looper.getMainLooper())
     private var updateTimeRunnable: Runnable? = null
+    private val timeFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -191,8 +192,8 @@ class AudioPlayerActivity : AppCompatActivity() {
                 mediaPlayer?.let { mp ->
                     if (mp.isPlaying) {
                         val currentPosition = mp.currentPosition
-                        playTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(currentPosition.toLong())
-                        handler.postDelayed(this, 500)
+                        playTime.text = timeFormat.format(currentPosition.toLong())
+                        handler.postDelayed(this, UPDATE_TIME_DELAY_MS)
                     }
                 }
             }
@@ -223,5 +224,6 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     companion object {
         const val TRACK_KEY = "TRACK"
+        private const val UPDATE_TIME_DELAY_MS = 500L
     }
 }
