@@ -12,7 +12,8 @@ class AudioPlayerViewModel(
     private val pauseUseCase: PauseUseCase,
     private val releasePlayerUseCase: ReleasePlayerUseCase,
     private val getPlayerPositionUseCase: GetPlayerPositionUseCase,
-    private val isPlayerPlayingUseCase: IsPlayerPlayingUseCase
+    private val isPlayerPlayingUseCase: IsPlayerPlayingUseCase,
+    private val setPlayerCompletionListenerUseCase: SetPlayerCompletionListenerUseCase
 ) : ViewModel() {
 
     private val _state = MutableLiveData<AudioPlayerState>()
@@ -32,9 +33,12 @@ class AudioPlayerViewModel(
     fun playPause() {
         val track = currentTrack ?: return
         when (val currentState = _state.value) {
-            is AudioPlayerState.Prepared, is AudioPlayerState.Paused -> {
+            is AudioPlayerState.Prepared, is AudioPlayerState.Paused, is AudioPlayerState.Completed -> {
                 playUseCase()
                 _state.value = AudioPlayerState.Playing(track)
+                setPlayerCompletionListenerUseCase {
+                    _state.value = AudioPlayerState.Completed(track)
+                }
             }
             is AudioPlayerState.Playing -> {
                 pauseUseCase()

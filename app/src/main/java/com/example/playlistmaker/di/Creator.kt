@@ -109,6 +109,10 @@ object Creator {
         return IsPlayerPlayingUseCaseImpl(playerRepository)
     }
 
+    fun getSetPlayerCompletionListenerUseCase(): SetPlayerCompletionListenerUseCase {
+        return SetPlayerCompletionListenerUseCaseImpl(playerRepository)
+    }
+
     // ViewModels
     fun provideSearchViewModel(): com.example.playlistmaker.presentation.ui.search.SearchViewModel {
         return com.example.playlistmaker.presentation.ui.search.SearchViewModel(
@@ -126,7 +130,8 @@ object Creator {
             pauseUseCase = getPauseUseCase(),
             releasePlayerUseCase = getReleasePlayerUseCase(),
             getPlayerPositionUseCase = getPlayerPositionUseCase(),
-            isPlayerPlayingUseCase = getIsPlayerPlayingUseCase()
+            isPlayerPlayingUseCase = getIsPlayerPlayingUseCase(),
+            setPlayerCompletionListenerUseCase = getSetPlayerCompletionListenerUseCase()
         )
     }
 

@@ -17,6 +17,12 @@ class PlayerRepositoryImpl : PlayerRepository {
         }
     }
 
+    override fun setOnCompletionListener(callback: () -> Unit) {
+        mediaPlayer?.setOnCompletionListener {
+            callback()
+        }
+    }
+
     override fun play() {
         mediaPlayer?.start()
     }
