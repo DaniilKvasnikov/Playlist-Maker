@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.ui.player
 
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -20,6 +19,7 @@ import com.example.playlistmaker.data.mapper.TrackMapper
 import com.example.playlistmaker.di.Creator
 import com.example.playlistmaker.domain.models.Track
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -61,13 +61,9 @@ class AudioPlayerActivity : AppCompatActivity() {
         setupUI()
         observeViewModel()
 
-        // Получаем TrackDto из Intent и конвертируем в domain Track
-        val trackDto = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(TRACK_KEY, TrackDto::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra(TRACK_KEY)
-        }
+        // Получаем TrackDto из Intent через десериализацию JSON
+        val trackJson = intent.getStringExtra(TRACK_KEY)
+        val trackDto = trackJson?.let { Gson().fromJson(it, TrackDto::class.java) }
 
         trackDto?.let {
             val track = TrackMapper.mapDtoToDomain(it)

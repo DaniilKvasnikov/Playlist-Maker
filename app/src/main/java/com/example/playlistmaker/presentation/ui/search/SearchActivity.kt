@@ -28,6 +28,7 @@ import com.example.playlistmaker.di.Creator
 import com.example.playlistmaker.domain.models.Track
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.ViewUtils.hideKeyboard
+import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var viewModel: SearchViewModel
@@ -249,9 +250,10 @@ class SearchActivity : AppCompatActivity() {
 
     private fun openAudioPlayer(track: Track) {
         val intent = Intent(this, AudioPlayerActivity::class.java)
-        // Конвертируем domain Track в TrackDto для передачи через Intent
+        // Конвертируем domain Track в TrackDto и сериализуем в JSON
         val trackDto = TrackMapper.mapDomainToDto(track)
-        intent.putExtra(AudioPlayerActivity.TRACK_KEY, trackDto)
+        val trackJson = Gson().toJson(trackDto)
+        intent.putExtra(AudioPlayerActivity.TRACK_KEY, trackJson)
         startActivity(intent)
     }
 
