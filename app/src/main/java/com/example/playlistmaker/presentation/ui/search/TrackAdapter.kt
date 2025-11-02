@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.search
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,18 +9,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
 
 class TrackAdapter(
     private val items: List<Track>,
     private val onTrackClick: (Track) -> Unit = {}
 ) : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
-    override fun onCreateViewHolder( parent: ViewGroup, viewType: Int): TrackViewHolder {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_track, parent, false)
         return TrackViewHolder(view)
     }
 
-    override fun onBindViewHolder( holder: TrackViewHolder, position: Int ) {
+    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(items[position])
         holder.itemView.setOnClickListener {
             onTrackClick(items[position])
@@ -41,19 +44,19 @@ class TrackAdapter(
         fun bind(track: Track) {
             headerView.text = track.trackName
             infoView.text = track.artistName
-            durationView.text = track.trackTime
+            durationView.text = track.getFormattedTime()
 
             itemView.post {
                 val containerWidth = headerView.width
                 val chevronWidth = chevronView.width
                 val durationWidth = durationView.width
                 val maxWidth = containerWidth - chevronWidth - durationWidth
-                
+
                 if (maxWidth > 0) {
                     infoView.maxWidth = maxWidth
                 }
             }
-            
+
             Glide.with(itemView)
                 .load(track.artworkUrl100)
                 .apply(RequestOptions().transform(RoundedCorners(2.toPx(itemView))))
@@ -61,10 +64,9 @@ class TrackAdapter(
                 .error(R.drawable.ic_placeholder_45)
                 .into(imageView)
         }
+
         fun Int.toPx(view: View): Int {
             return (this * view.resources.displayMetrics.density).toInt()
         }
     }
-
-
 }
