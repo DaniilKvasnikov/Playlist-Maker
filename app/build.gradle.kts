@@ -1,5 +1,20 @@
 import org.gradle.kotlin.dsl.implementation
 
+val Any.ktx: kotlin.Any
+    get() = "Some extension value"
+
+
+
+val Any.viewmodel: kotlin.Any
+    get() = "Some extension value"
+
+
+
+val org.gradle.accessors.dm.LibrariesForLibs.AndroidxLibraryAccessors.lifecycle: kotlin.Any
+    get() = "Some extension value"
+
+
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -53,4 +68,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 }

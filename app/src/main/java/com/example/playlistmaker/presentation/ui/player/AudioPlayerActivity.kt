@@ -1,6 +1,5 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation.ui.player
 
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -15,12 +14,18 @@ import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.dto.TrackDto
+import com.example.playlistmaker.data.mapper.TrackMapper
+import com.example.playlistmaker.di.Creator
+import com.example.playlistmaker.domain.models.Track
 import com.google.android.material.appbar.MaterialToolbar
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AudioPlayerActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: AudioPlayerViewModel
     private lateinit var toolbar: MaterialToolbar
     private lateinit var trackCover: ImageView
     private lateinit var trackName: TextView
@@ -35,8 +40,6 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var genreValue: TextView
     private lateinit var countryValue: TextView
 
-    private var mediaPlayer: MediaPlayer? = null
-    private var isPlaying = false
     private val handler = Handler(Looper.getMainLooper())
     private var updateTimeRunnable: Runnable? = null
     private val timeFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
@@ -45,12 +48,34 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_audio_player)
+
+        // Получаем ViewModel из Creator
+        viewModel = Creator.provideAudioPlayerViewModel()
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        setupUI()
+        observeViewModel()
+
+        // Получаем TrackDto из Intent и конвертируем в domain Track
+        val trackDto = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(TRACK_KEY, TrackDto::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra(TRACK_KEY)
+        }
+
+        trackDto?.let {
+            val track = TrackMapper.mapDtoToDomain(it)
+            viewModel.preparePlayer(track)
+        }
+    }
+
+    private fun setupUI() {
         toolbar = findViewById(R.id.toolbar)
         trackCover = findViewById(R.id.track_cover)
         trackName = findViewById(R.id.track_name)
@@ -69,25 +94,51 @@ class AudioPlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        val track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(TRACK_KEY, Track::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra(TRACK_KEY)
+        playButton.setOnClickListener {
+            viewModel.playPause()
         }
-        track?.let {
-            displayTrackInfo(it)
-            setupAudioPlayer(it)
+    }
+
+    private fun observeViewModel() {
+        viewModel.state.observe(this) { state ->
+            render(state)
+        }
+
+        viewModel.currentPosition.observe(this) { position ->
+            playTime.text = timeFormat.format(position.toLong())
+        }
+    }
+
+    private fun render(state: AudioPlayerState) {
+        when (state) {
+            is AudioPlayerState.Prepared -> {
+                displayTrackInfo(state.track)
+                updatePlayButton(false)
+                stopUpdatingTime()
+                playTime.text = getString(R.string.default_playTime)
+            }
+            is AudioPlayerState.Playing -> {
+                updatePlayButton(true)
+                startUpdatingTime()
+            }
+            is AudioPlayerState.Paused -> {
+                updatePlayButton(false)
+                stopUpdatingTime()
+            }
+            is AudioPlayerState.Completed -> {
+                updatePlayButton(false)
+                stopUpdatingTime()
+                playTime.text = getString(R.string.default_playTime)
+            }
         }
     }
 
     private fun displayTrackInfo(track: Track) {
         trackName.text = track.trackName
         artistName.text = track.artistName
-        durationValue.text = track.trackTime
+        durationValue.text = track.getFormattedTime()
         genreValue.text = track.primaryGenreName
         countryValue.text = track.country
-        playTime.text = getString(R.string.default_playTime)
 
         if (!track.collectionName.isNullOrEmpty()) {
             albumValue.text = track.collectionName
@@ -103,7 +154,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.year_label).visibility = TextView.GONE
         }
 
-        val artworkUrl512 = track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+        val artworkUrl512 = track.getArtworkUrl512()
         Glide.with(this)
             .load(artworkUrl512)
             .apply(RequestOptions().transform(RoundedCorners(8.toPx())))
@@ -123,61 +174,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupAudioPlayer(track: Track) {
-        playButton.setOnClickListener {
-            if (isPlaying) {
-                pausePlayer()
-            } else {
-                playPlayer(track.previewUrl)
-            }
-        }
-    }
-
-    private fun playPlayer(url: String) {
-        try {
-            if (mediaPlayer == null) {
-                mediaPlayer = MediaPlayer().apply {
-                    setDataSource(url)
-                    prepareAsync()
-                    setOnPreparedListener {
-                        start()
-                        this@AudioPlayerActivity.isPlaying = true
-                        updatePlayButton()
-                        startUpdatingTime()
-                    }
-                    setOnCompletionListener {
-                        stopPlayer()
-                    }
-                }
-            } else {
-                mediaPlayer?.start()
-                isPlaying = true
-                updatePlayButton()
-                startUpdatingTime()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun pausePlayer() {
-        mediaPlayer?.pause()
-        isPlaying = false
-        updatePlayButton()
-        stopUpdatingTime()
-    }
-
-    private fun stopPlayer() {
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
-        mediaPlayer = null
-        isPlaying = false
-        updatePlayButton()
-        stopUpdatingTime()
-        playTime.text = getString(R.string.default_playTime)
-    }
-
-    private fun updatePlayButton() {
+    private fun updatePlayButton(isPlaying: Boolean) {
         val iconRes = if (isPlaying) {
             R.drawable.ic_pause_button_84
         } else {
@@ -189,12 +186,12 @@ class AudioPlayerActivity : AppCompatActivity() {
     private fun startUpdatingTime() {
         updateTimeRunnable = object : Runnable {
             override fun run() {
-                mediaPlayer?.let { mp ->
-                    if (mp.isPlaying) {
-                        val currentPosition = mp.currentPosition
-                        playTime.text = timeFormat.format(currentPosition.toLong())
-                        handler.postDelayed(this, UPDATE_TIME_DELAY_MS)
-                    }
+                // Обновляем время через ViewModel
+                viewModel.updatePosition()
+
+                // Проверяем, играет ли еще трек
+                if (viewModel.isPlaying()) {
+                    handler.postDelayed(this, UPDATE_TIME_DELAY_MS)
                 }
             }
         }
@@ -212,14 +209,12 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        viewModel.pause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         stopUpdatingTime()
-        mediaPlayer?.release()
-        mediaPlayer = null
     }
 
     companion object {

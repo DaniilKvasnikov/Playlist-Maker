@@ -1,18 +1,19 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data.local
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.core.content.edit
+import com.example.playlistmaker.data.dto.TrackDto
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import androidx.core.content.edit
 
-class SearchHistory(context: Context) {
+class SearchHistoryStorage(context: Context) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
         HISTORY_PREFERENCES, Context.MODE_PRIVATE
     )
     private val gson = Gson()
-    
-    fun addTrack(track: Track) {
+
+    fun addTrack(track: TrackDto) {
         val history = getHistory().toMutableList()
         history.removeAll { it.trackId == track.trackId }
         history.add(0, track)
@@ -21,22 +22,22 @@ class SearchHistory(context: Context) {
         }
         saveHistory(history)
     }
-    
-    fun getHistory(): List<Track> {
+
+    fun getHistory(): List<TrackDto> {
         val json = sharedPreferences.getString(HISTORY_KEY, null) ?: return emptyList()
-        val type = object : TypeToken<List<Track>>() {}.type
+        val type = object : TypeToken<List<TrackDto>>() {}.type
         return gson.fromJson(json, type) ?: emptyList()
     }
-    
+
     fun clearHistory() {
         sharedPreferences.edit { remove(HISTORY_KEY) }
     }
-    
-    private fun saveHistory(history: List<Track>) {
+
+    private fun saveHistory(history: List<TrackDto>) {
         val json = gson.toJson(history)
         sharedPreferences.edit { putString(HISTORY_KEY, json) }
     }
-    
+
     companion object {
         private const val HISTORY_PREFERENCES = "track_history"
         private const val HISTORY_KEY = "history_tracks"
