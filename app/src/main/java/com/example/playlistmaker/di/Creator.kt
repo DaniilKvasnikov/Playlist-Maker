@@ -1,6 +1,8 @@
 package com.example.playlistmaker.di
 
 import android.app.Application
+import com.example.playlistmaker.data.api.MediaPlayerFactory
+import com.example.playlistmaker.data.factory.MediaPlayerFactoryImpl
 import com.example.playlistmaker.data.local.SearchHistoryStorage
 import com.example.playlistmaker.data.local.SettingsStorage
 import com.example.playlistmaker.data.mapper.TrackMapper
@@ -35,6 +37,11 @@ object Creator {
     // Mappers
     private fun getTrackMapper() = TrackMapper
 
+    // Factories
+    private val mediaPlayerFactory: MediaPlayerFactory by lazy {
+        MediaPlayerFactoryImpl()
+    }
+
     // Repositories
     private val tracksRepository: TracksRepository by lazy {
         TracksRepositoryImpl(
@@ -57,7 +64,9 @@ object Creator {
     }
 
     private val playerRepository: PlayerRepository by lazy {
-        PlayerRepositoryImpl()
+        PlayerRepositoryImpl(
+            mediaPlayerFactory = mediaPlayerFactory
+        )
     }
 
     // Use Cases

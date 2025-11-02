@@ -1,14 +1,17 @@
 package com.example.playlistmaker.data.repository
 
 import android.media.MediaPlayer
+import com.example.playlistmaker.data.api.MediaPlayerFactory
 import com.example.playlistmaker.domain.api.PlayerRepository
 
-class PlayerRepositoryImpl : PlayerRepository {
+class PlayerRepositoryImpl(
+    private val mediaPlayerFactory: MediaPlayerFactory
+) : PlayerRepository {
     private var mediaPlayer: MediaPlayer? = null
 
     override fun preparePlayer(url: String) {
         if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer()
+            mediaPlayer = mediaPlayerFactory.create()
         }
         mediaPlayer?.apply {
             reset()
