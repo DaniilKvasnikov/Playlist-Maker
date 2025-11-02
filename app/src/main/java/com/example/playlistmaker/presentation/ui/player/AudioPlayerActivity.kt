@@ -128,7 +128,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             is AudioPlayerState.Completed -> {
                 updatePlayButton(false)
                 stopUpdatingTime()
-                playTime.text = getString(R.string.default_playTime)
+                playTime.text = state.track.getFormattedTime()
             }
         }
     }
