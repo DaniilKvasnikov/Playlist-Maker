@@ -18,9 +18,8 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.internal.ViewUtils.hideKeyboard
-import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.player.ui.AudioPlayerActivity
-import com.example.playlistmaker.search.data.mapper.TrackMapper
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 
@@ -36,8 +35,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private var stringInput: String = ""
     private lateinit var historyAdapter: TrackAdapter
-    private val historyData = mutableListOf<Track>()
-    private val data = mutableListOf<Track>()
+    private val historyData = mutableListOf<TrackUI>()
+    private val data = mutableListOf<TrackUI>()
 
     private val searchHandler = Handler(Looper.getMainLooper())
     private var searchRunnable: Runnable? = null
@@ -228,10 +227,9 @@ class SearchActivity : AppCompatActivity() {
         return true
     }
 
-    private fun openAudioPlayer(track: Track) {
+    private fun openAudioPlayer(track: TrackUI) {
         val intent = Intent(this, AudioPlayerActivity::class.java)
-        val trackDto = TrackMapper.mapDomainToDto(track)
-        intent.putExtra(AudioPlayerActivity.TRACK_KEY, trackDto)
+        intent.putExtra(AudioPlayerActivity.TRACK_KEY, track)
         startActivity(intent)
     }
 

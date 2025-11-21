@@ -10,7 +10,7 @@ import com.example.playlistmaker.player.domain.api.PauseUseCase
 import com.example.playlistmaker.player.domain.api.PlayUseCase
 import com.example.playlistmaker.player.domain.api.PreparePlayerUseCase
 import com.example.playlistmaker.player.domain.api.ReleasePlayerUseCase
-import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.models.TrackUI
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -28,10 +28,10 @@ class AudioPlayerViewModel(
     private val _state = MutableLiveData<AudioPlayerState>()
     val state: LiveData<AudioPlayerState> = _state
 
-    private var currentTrack: Track? = null
+    private var currentTrack: TrackUI? = null
     private var updateJob: Job? = null
 
-    fun preparePlayer(track: Track) {
+    fun preparePlayer(track: TrackUI) {
         currentTrack = track
         preparePlayerUseCase(
             url = track.previewUrl,

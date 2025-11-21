@@ -8,7 +8,9 @@ import com.example.playlistmaker.search.domain.api.ClearSearchHistoryUseCase
 import com.example.playlistmaker.search.domain.api.GetSearchHistoryUseCase
 import com.example.playlistmaker.search.domain.api.SaveTrackToHistoryUseCase
 import com.example.playlistmaker.search.domain.api.SearchTracksUseCase
-import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.mappers.toDomain
+import com.example.playlistmaker.search.ui.mappers.toUI
+import com.example.playlistmaker.search.ui.models.TrackUI
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -30,7 +32,7 @@ class SearchViewModel(
                     _state.value = if (tracks.isEmpty()) {
                         SearchState.Empty
                     } else {
-                        SearchState.Content(tracks)
+                        SearchState.Content(tracks.toUI())
                     }
                 }
                 .onFailure {
@@ -42,14 +44,14 @@ class SearchViewModel(
     fun loadHistory() {
         val history = getSearchHistoryUseCase()
         if (history.isNotEmpty()) {
-            _state.value = SearchState.History(history)
+            _state.value = SearchState.History(history.toUI())
         } else {
             _state.value = SearchState.None
         }
     }
 
-    fun saveToHistory(track: Track) {
-        saveTrackToHistoryUseCase(track)
+    fun saveToHistory(track: TrackUI) {
+        saveTrackToHistoryUseCase(track.toDomain())
     }
 
     fun clearHistory() {

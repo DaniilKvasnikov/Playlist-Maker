@@ -9,11 +9,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ItemTrackBinding
-import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.models.TrackUI
 
 class TrackAdapter(
-    private val items: List<Track>,
-    private val onTrackClick: (Track) -> Unit = {}
+    private val items: List<TrackUI>,
+    private val onTrackClick: (TrackUI) -> Unit = {}
 ) : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
 
     override fun onCreateViewHolder( parent: ViewGroup, viewType: Int): TrackViewHolder = TrackViewHolder.from(parent)
@@ -41,10 +41,10 @@ class TrackAdapter(
             }
         }
 
-        fun bind(track: Track) {
+        fun bind(track: TrackUI) {
             binding.tvTitle.text = track.trackName
             binding.tvSubtitle.text = track.artistName
-            binding.tvDuration.text = track.trackTime
+            binding.tvDuration.text = track.getFormattedTime()
 
             itemView.post {
                 val containerWidth = binding.tvTitle.width

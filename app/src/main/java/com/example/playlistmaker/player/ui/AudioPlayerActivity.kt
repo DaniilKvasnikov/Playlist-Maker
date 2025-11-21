@@ -14,9 +14,7 @@ import com.bumptech.glide.request.RequestOptions
 import java.text.SimpleDateFormat
 import java.util.Locale
 import com.example.playlistmaker.R
-import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.search.data.dto.TrackDto
-import com.example.playlistmaker.search.data.mapper.TrackMapper
+import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 
@@ -101,10 +99,10 @@ class AudioPlayerActivity : AppCompatActivity() {
         binding.playButton.setImageResource(iconRes)
     }
 
-    private fun displayTrackInfo(track: Track) {
+    private fun displayTrackInfo(track: TrackUI) {
         binding.trackName.text = track.trackName
         binding.artistName.text = track.artistName
-        binding.durationValue.text = track.trackTime
+        binding.durationValue.text = track.getFormattedTime()
         binding.genreValue.text = track.primaryGenreName
         binding.countryValue.text = track.country
         binding.playTime.text = getString(R.string.default_playTime)
@@ -123,7 +121,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             binding.yearLabel.visibility = TextView.GONE
         }
 
-        val artworkUrl512 = TrackMapper.getHighResArtworkUrl(track.artworkUrl100)
+        val artworkUrl512 = track.getArtworkUrl512()
         Glide.with(this)
             .load(artworkUrl512)
             .apply(RequestOptions().transform(RoundedCorners(ARTWORK_CORNER_RADIUS_DP.toPx())))
@@ -143,14 +141,13 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun getTrackFromIntent(): Track? {
-        val trackDto = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(TRACK_KEY, TrackDto::class.java)
+    private fun getTrackFromIntent(): TrackUI? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(TRACK_KEY, TrackUI::class.java)
         } else {
             @Suppress("DEPRECATION")
             intent.getParcelableExtra(TRACK_KEY)
         }
-        return trackDto?.let { TrackMapper.mapDtoToDomain(it) }
     }
 
     private fun Int.toPx(): Int {
