@@ -75,6 +75,7 @@ class AudioPlayerViewModel(
     }
 
     private fun startUpdatingPosition() {
+        stopUpdatingPosition()
         updateJob = viewModelScope.launch {
             val track = currentTrack ?: return@launch
             while (isActive) {
