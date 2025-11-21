@@ -142,7 +142,6 @@
                 android:text="@string/duration"
                 android:textColor="@color/item_track_info_play"
                 android:textSize="13sp"
-                android:lines="1"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/play_time" />
