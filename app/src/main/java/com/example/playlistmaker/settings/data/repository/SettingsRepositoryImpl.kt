@@ -1,18 +1,18 @@
 package com.example.playlistmaker.settings.data.repository
 
-import com.example.playlistmaker.settings.data.storage.ThemeStorage
+import com.example.playlistmaker.settings.domain.api.ThemeDataSource
 import com.example.playlistmaker.settings.domain.api.SettingsRepository
 import com.example.playlistmaker.settings.domain.models.ThemeSettings
 
 class SettingsRepositoryImpl(
-    private val themeStorage: ThemeStorage
+    private val themeDataSource: ThemeDataSource
 ) : SettingsRepository {
 
     override fun getThemeSettings(): ThemeSettings {
-        return ThemeSettings(isDarkTheme = themeStorage.getTheme())
+        return ThemeSettings(isDarkTheme = themeDataSource.getTheme())
     }
 
     override fun saveThemeSettings(settings: ThemeSettings) {
-        themeStorage.saveTheme(settings.isDarkTheme)
+        themeDataSource.saveTheme(settings.isDarkTheme)
     }
 }

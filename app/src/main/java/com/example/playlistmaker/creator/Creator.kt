@@ -4,7 +4,8 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.search.data.local.SearchHistoryStorage
-import com.example.playlistmaker.settings.data.storage.ThemeStorage
+import com.example.playlistmaker.settings.domain.api.ThemeDataSource
+import com.example.playlistmaker.settings.data.storage.SharedPreferencesThemeStorage
 import com.example.playlistmaker.settings.data.applier.ThemeApplier
 import com.example.playlistmaker.search.data.mapper.TrackMapper
 import com.example.playlistmaker.search.data.network.NetworkClient
@@ -32,7 +33,7 @@ object Creator {
 
     fun init(app: Application) {
         application = app
-        themeApplier.applyTheme(themeStorage.getTheme())
+        themeApplier.applyTheme(themeDataSource.getTheme())
     }
 
     // Network
@@ -43,8 +44,8 @@ object Creator {
         SearchHistoryStorage(application)
     }
 
-    private val themeStorage: ThemeStorage by lazy {
-        ThemeStorage(application)
+    private val themeDataSource: ThemeDataSource by lazy {
+        SharedPreferencesThemeStorage(application)
     }
 
     private val themeApplier: ThemeApplier by lazy {
@@ -71,7 +72,7 @@ object Creator {
 
     private val settingsRepository: SettingsRepository by lazy {
         SettingsRepositoryImpl(
-            themeStorage = themeStorage
+            themeDataSource = themeDataSource
         )
     }
 
@@ -111,7 +112,7 @@ object Creator {
     fun getApplyThemeUseCase(): ApplyThemeUseCase {
         return ApplyThemeUseCaseImpl(
             themeApplier = themeApplier,
-            themeStorage = themeStorage
+            settingsRepository = settingsRepository
         )
     }
 
