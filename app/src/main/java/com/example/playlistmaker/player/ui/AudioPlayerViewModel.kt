@@ -47,7 +47,7 @@ class AudioPlayerViewModel(
     fun playPause() {
         val track = currentTrack ?: return
         when (val currentState = _state.value) {
-            is AudioPlayerState.Prepared, is AudioPlayerState.Paused -> {
+            is AudioPlayerState.Prepared, is AudioPlayerState.Paused, is AudioPlayerState.Completed -> {
                 playUseCase()
                 _state.value = AudioPlayerState.Playing(track, 0)
                 startUpdatingPosition()
