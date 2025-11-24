@@ -5,7 +5,7 @@ import com.example.playlistmaker.player.data.factory.AndroidMediaPlayerFactory
 import com.example.playlistmaker.search.data.local.SearchHistoryStorage
 import com.example.playlistmaker.search.data.mapper.TrackMapper
 import com.example.playlistmaker.search.data.network.ITunesApiService
-import com.example.playlistmaker.settings.data.applier.ThemeApplier
+import com.example.playlistmaker.settings.domain.applier.ThemeApplier
 import com.example.playlistmaker.settings.data.storage.SharedPreferencesThemeStorage
 import com.example.playlistmaker.settings.domain.api.ThemeDataSource
 import com.google.gson.Gson
@@ -56,6 +56,6 @@ val dataModule = module {
 
     // Utilities
     single {
-        ThemeApplier()
+        ThemeApplier(get())
     }
 }

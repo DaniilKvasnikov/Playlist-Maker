@@ -5,8 +5,7 @@ import com.example.playlistmaker.di.dataModule
 import com.example.playlistmaker.di.domainModule
 import com.example.playlistmaker.di.presentationModule
 import com.example.playlistmaker.di.repositoryModule
-import com.example.playlistmaker.settings.data.applier.ThemeApplier
-import com.example.playlistmaker.settings.domain.api.ThemeDataSource
+import com.example.playlistmaker.settings.domain.applier.ThemeApplier
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -29,7 +28,6 @@ class App : Application() {
         }
 
         val themeApplier: ThemeApplier by inject()
-        val themeDataSource: ThemeDataSource by inject()
-        themeApplier.applyTheme(themeDataSource.getTheme())
+        themeApplier.applyTheme()
     }
 }
