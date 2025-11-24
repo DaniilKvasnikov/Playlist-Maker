@@ -1,8 +1,10 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.player.data.factory.AndroidMediaPlayerFactory
 import com.example.playlistmaker.player.data.repository.PlayerRepositoryImpl
 import com.example.playlistmaker.player.domain.api.GetCurrentPositionUseCase
 import com.example.playlistmaker.player.domain.api.IsPlayingUseCase
+import com.example.playlistmaker.player.domain.api.MediaPlayerFactory
 import com.example.playlistmaker.player.domain.api.PauseUseCase
 import com.example.playlistmaker.player.domain.api.PlayUseCase
 import com.example.playlistmaker.player.domain.api.PlayerRepository
@@ -60,7 +62,9 @@ import org.koin.dsl.module
 val repositoryModule = module {
     single { ThemeApplier() }
     single<NavigationRepository> { NavigationRepositoryImpl(androidContext()) }
-    single<PlayerRepository> { PlayerRepositoryImpl() }
+    single<PlayerRepository> { PlayerRepositoryImpl(get()) }
+    single<MediaPlayerFactory>{AndroidMediaPlayerFactory()}
+    single<MediaPlayerFactory> { AndroidMediaPlayerFactory() }
     single<SettingsRepository> { SettingsRepositoryImpl(get()) }
     single<ThemeDataSource> { SharedPreferencesThemeStorage(androidApplication()) }
     single<SearchHistoryStorage> { SearchHistoryStorage(androidApplication()) }
