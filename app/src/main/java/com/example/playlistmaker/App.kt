@@ -11,8 +11,6 @@ import org.koin.core.context.startKoin
 
 class App : Application() {
 
-    private val themeApplier: ThemeApplier by inject()
-    private val themeDataSource: ThemeDataSource by inject()
     override fun onCreate() {
        super.onCreate()
        startKoin {
@@ -20,6 +18,8 @@ class App : Application() {
            androidContext(this@App)
            modules(repositoryModule)
        }
-       themeApplier.applyTheme(themeDataSource.getTheme())
+        val themeApplier: ThemeApplier by inject()
+        val themeDataSource: ThemeDataSource by inject()
+        themeApplier.applyTheme(themeDataSource.getTheme())
    }
 }
