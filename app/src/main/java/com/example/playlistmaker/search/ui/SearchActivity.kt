@@ -12,15 +12,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.core.view.marginTop
 import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.internal.ViewUtils.hideKeyboard
-import com.example.playlistmaker.search.ui.models.TrackUI
-import com.example.playlistmaker.player.ui.AudioPlayerActivity
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.player.ui.AudioPlayerActivity
+import com.example.playlistmaker.search.ui.models.TrackUI
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import org.koin.android.ext.android.inject
 
 class SearchActivity : AppCompatActivity() {

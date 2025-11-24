@@ -20,7 +20,6 @@ import com.example.playlistmaker.player.ui.AudioPlayerViewModel
 import com.example.playlistmaker.search.data.local.SearchHistoryStorage
 import com.example.playlistmaker.search.data.mapper.TrackMapper
 import com.example.playlistmaker.search.data.network.ITunesApiService
-import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.data.repository.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.search.data.repository.TracksRepositoryImpl
 import com.example.playlistmaker.search.domain.api.ClearSearchHistoryUseCase
@@ -60,15 +59,16 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 val repositoryModule = module {
     single { ThemeApplier() }
     single<NavigationRepository> { NavigationRepositoryImpl(androidContext()) }
     single<PlayerRepository> { PlayerRepositoryImpl(get()) }
-    single<MediaPlayerFactory>{AndroidMediaPlayerFactory()}
     single<MediaPlayerFactory> { AndroidMediaPlayerFactory() }
     single<SettingsRepository> { SettingsRepositoryImpl(get()) }
-    single<ThemeDataSource> { SharedPreferencesThemeStorage(androidApplication()) }
+    single<ThemeDataSource> { SharedPreferencesThemeStorage(androidContext()) }
     single<SearchHistoryStorage> { SearchHistoryStorage(androidApplication(), get()) }
     single<TracksRepository> { TracksRepositoryImpl(get(), get()) }
     single<SearchHistoryRepository> { SearchHistoryRepositoryImpl(get(), get()) }
@@ -88,9 +88,20 @@ val repositoryModule = module {
     single<ShareAppUseCase> { ShareAppUseCaseImpl(get()) }
     single<OpenSupportUseCase> { OpenSupportUseCaseImpl(get()) }
     single<OpenTermsUseCase> { OpenTermsUseCaseImpl(get()) }
-    single<ITunesApiService> { NetworkClient.getITunesApi() }
     single<TrackMapper> { TrackMapper }
-    single<Gson> { GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").create() }
+    single<Gson> {
+        GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+            .create()
+    }
+    single<Retrofit> {
+        Retrofit.Builder()
+            .baseUrl("https://itunes.apple.com/")
+            .addConverterFactory(GsonConverterFactory.create(get()))
+            .build()
+    }
+    single<ITunesApiService> { get<Retrofit>().create(ITunesApiService::class.java) }
+
     viewModel { SearchViewModel(get(), get(), get(), get()) }
     viewModel { AudioPlayerViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get()) }

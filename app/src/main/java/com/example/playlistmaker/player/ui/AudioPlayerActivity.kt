@@ -7,16 +7,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
+import com.example.playlistmaker.search.ui.models.TrackUI
+import org.koin.android.ext.android.inject
 import java.text.SimpleDateFormat
 import java.util.Locale
-import com.example.playlistmaker.R
-import com.example.playlistmaker.search.ui.models.TrackUI
-import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
-import org.koin.android.ext.android.inject
 
 class AudioPlayerActivity : AppCompatActivity() {
 
