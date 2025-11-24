@@ -54,11 +54,11 @@ import com.example.playlistmaker.settings.domain.impl.ShareAppUseCaseImpl
 import com.example.playlistmaker.settings.ui.SettingsViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val repositoryModule = module {
     single { ThemeApplier() }
-    single<ThemeDataSource> { SharedPreferencesThemeStorage(androidContext()) }
     single<NavigationRepository> { NavigationRepositoryImpl(androidContext()) }
     single<PlayerRepository> { PlayerRepositoryImpl() }
     single<SettingsRepository> { SettingsRepositoryImpl(get()) }
@@ -82,9 +82,9 @@ val repositoryModule = module {
     single<ShareAppUseCase> { ShareAppUseCaseImpl(get()) }
     single<OpenSupportUseCase> { OpenSupportUseCaseImpl(get()) }
     single<OpenTermsUseCase> { OpenTermsUseCaseImpl(get()) }
-    single<SearchViewModel> { SearchViewModel(get(),get(),get(),get()) }
-    single<AudioPlayerViewModel> { AudioPlayerViewModel(get(),get(),get(),get(), get(), get()) }
-    single<SettingsViewModel> { SettingsViewModel(get(),get(),get(),get(), get(), get()) }
+    viewModel { SearchViewModel(get(), get(), get(), get()) }
+    viewModel { AudioPlayerViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get()) }
     single<ITunesApiService> { NetworkClient.getITunesApi() }
     single<TrackMapper> { TrackMapper }
 }
