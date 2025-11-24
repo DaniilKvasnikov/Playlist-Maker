@@ -13,13 +13,13 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.search.ui.models.TrackUI
-import org.koin.android.ext.android.inject
 import java.text.SimpleDateFormat
 import java.util.Locale
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AudioPlayerActivity : AppCompatActivity() {
 
-    private val viewModel: AudioPlayerViewModel by inject()
+    private val viewModel by viewModel<AudioPlayerViewModel>()
 
     private lateinit var binding: ActivityAudioPlayerBinding
 
