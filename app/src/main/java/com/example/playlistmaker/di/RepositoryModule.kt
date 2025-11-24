@@ -54,6 +54,8 @@ import com.example.playlistmaker.settings.domain.impl.OpenTermsUseCaseImpl
 import com.example.playlistmaker.settings.domain.impl.SaveThemeSettingsUseCaseImpl
 import com.example.playlistmaker.settings.domain.impl.ShareAppUseCaseImpl
 import com.example.playlistmaker.settings.ui.SettingsViewModel
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
@@ -67,7 +69,7 @@ val repositoryModule = module {
     single<MediaPlayerFactory> { AndroidMediaPlayerFactory() }
     single<SettingsRepository> { SettingsRepositoryImpl(get()) }
     single<ThemeDataSource> { SharedPreferencesThemeStorage(androidApplication()) }
-    single<SearchHistoryStorage> { SearchHistoryStorage(androidApplication()) }
+    single<SearchHistoryStorage> { SearchHistoryStorage(androidApplication(), get()) }
     single<TracksRepository> { TracksRepositoryImpl(get(), get()) }
     single<SearchHistoryRepository> { SearchHistoryRepositoryImpl(get(), get()) }
     single<SearchTracksUseCase> { SearchTracksUseCaseImpl(get()) }
@@ -86,9 +88,10 @@ val repositoryModule = module {
     single<ShareAppUseCase> { ShareAppUseCaseImpl(get()) }
     single<OpenSupportUseCase> { OpenSupportUseCaseImpl(get()) }
     single<OpenTermsUseCase> { OpenTermsUseCaseImpl(get()) }
+    single<ITunesApiService> { NetworkClient.getITunesApi() }
+    single<TrackMapper> { TrackMapper }
+    single<Gson> { GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").create() }
     viewModel { SearchViewModel(get(), get(), get(), get()) }
     viewModel { AudioPlayerViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get()) }
-    single<ITunesApiService> { NetworkClient.getITunesApi() }
-    single<TrackMapper> { TrackMapper }
 }
