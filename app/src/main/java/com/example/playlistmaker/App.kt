@@ -1,13 +1,25 @@
 package com.example.playlistmaker
 
 import android.app.Application
-import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.di.repositoryModule
+import com.example.playlistmaker.settings.data.applier.ThemeApplier
+import com.example.playlistmaker.settings.domain.api.ThemeDataSource
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 class App : Application() {
 
-   override fun onCreate() {
+    private val themeApplier: ThemeApplier by inject()
+    private val themeDataSource: ThemeDataSource by inject()
+    override fun onCreate() {
        super.onCreate()
-
-       Creator.init(this)
+       startKoin {
+           androidLogger()
+           androidContext(this@App)
+           modules(repositoryModule)
+       }
+       themeApplier.applyTheme(themeDataSource.getTheme())
    }
 }

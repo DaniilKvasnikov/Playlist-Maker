@@ -15,17 +15,12 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.ui.models.TrackUI
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
+import org.koin.android.ext.android.inject
 
 class AudioPlayerActivity : AppCompatActivity() {
 
-    private val viewModel: AudioPlayerViewModel by lazy {
-        ViewModelProvider(
-            this,
-            Creator.provideAudioPlayerViewModelFactory()
-        )[AudioPlayerViewModel::class.java]
-    }
+    private val viewModel: AudioPlayerViewModel by inject()
 
     private lateinit var binding: ActivityAudioPlayerBinding
 

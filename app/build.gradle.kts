@@ -43,6 +43,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.koin.android)
     implementation(libs.material)
     implementation(libs.glide)
     annotationProcessor(libs.compiler)

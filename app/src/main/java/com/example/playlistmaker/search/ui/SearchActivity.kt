@@ -20,17 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.player.ui.AudioPlayerActivity
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import org.koin.android.ext.android.inject
 
 class SearchActivity : AppCompatActivity() {
 
-    private val viewModel: SearchViewModel by lazy {
-        ViewModelProvider(
-            this,
-            Creator.provideSearchViewModelFactory()
-        )[SearchViewModel::class.java]
-    }
+    private val viewModel: SearchViewModel by inject()
 
     private lateinit var binding: ActivitySearchBinding
     private var stringInput: String = ""
