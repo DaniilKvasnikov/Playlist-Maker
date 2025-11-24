@@ -36,69 +36,69 @@ import org.koin.dsl.module
 
 val domainModule = module {
     // Search use cases
-    single<SearchTracksUseCase> {
+    factory<SearchTracksUseCase> {
         SearchTracksUseCaseImpl(get())
     }
 
-    single<GetSearchHistoryUseCase> {
+    factory<GetSearchHistoryUseCase> {
         GetSearchHistoryUseCaseImpl(get())
     }
 
-    single<SaveTrackToHistoryUseCase> {
+    factory<SaveTrackToHistoryUseCase> {
         SaveTrackToHistoryUseCaseImpl(get())
     }
 
-    single<ClearSearchHistoryUseCase> {
+    factory<ClearSearchHistoryUseCase> {
         ClearSearchHistoryUseCaseImpl(get())
     }
 
     // Player use cases
-    single<PreparePlayerUseCase> {
+    factory<PreparePlayerUseCase> {
         PreparePlayerUseCaseImpl(get())
     }
 
-    single<PlayUseCase> {
+    factory<PlayUseCase> {
         PlayUseCaseImpl(get())
     }
 
-    single<PauseUseCase> {
+    factory<PauseUseCase> {
         PauseUseCaseImpl(get())
     }
 
-    single<ReleasePlayerUseCase> {
+    factory<ReleasePlayerUseCase> {
         ReleasePlayerUseCaseImpl(get())
     }
 
-    single<GetCurrentPositionUseCase> {
+    factory<GetCurrentPositionUseCase> {
         GetCurrentPositionUseCaseImpl(get())
     }
 
-    single<IsPlayingUseCase> {
+    factory<IsPlayingUseCase> {
         IsPlayingUseCaseImpl(get())
     }
 
     // Settings use cases
-    single<GetThemeSettingsUseCase> {
+    factory<GetThemeSettingsUseCase> {
         GetThemeSettingsUseCaseImpl(get())
     }
 
-    single<SaveThemeSettingsUseCase> {
+    factory<SaveThemeSettingsUseCase> {
         SaveThemeSettingsUseCaseImpl(get())
     }
 
-    single<ApplyThemeUseCase> {
+    factory<ApplyThemeUseCase> {
         ApplyThemeUseCaseImpl(get(), get())
     }
 
-    single<ShareAppUseCase> {
+    factory<ShareAppUseCase> {
         ShareAppUseCaseImpl(get())
     }
 
-    single<OpenSupportUseCase> {
+    factory<OpenSupportUseCase> {
         OpenSupportUseCaseImpl(get())
     }
 
-    single<OpenTermsUseCase> {
+    factory<OpenTermsUseCase> {
         OpenTermsUseCaseImpl(get())
     }
 }
