@@ -7,25 +7,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
+import com.example.playlistmaker.search.ui.models.TrackUI
 import java.text.SimpleDateFormat
 import java.util.Locale
-import com.example.playlistmaker.R
-import com.example.playlistmaker.search.ui.models.TrackUI
-import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AudioPlayerActivity : AppCompatActivity() {
 
-    private val viewModel: AudioPlayerViewModel by lazy {
-        ViewModelProvider(
-            this,
-            Creator.provideAudioPlayerViewModelFactory()
-        )[AudioPlayerViewModel::class.java]
-    }
+    private val viewModel by viewModel<AudioPlayerViewModel>()
 
     private lateinit var binding: ActivityAudioPlayerBinding
 

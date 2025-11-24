@@ -7,11 +7,12 @@ import com.example.playlistmaker.search.data.dto.TrackDto
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SearchHistoryStorage(context: Context) {
+class SearchHistoryStorage(context: Context,
+                           private val gson: Gson
+) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
         HISTORY_PREFERENCES, Context.MODE_PRIVATE
     )
-    private val gson = Gson()
 
     fun addTrack(track: TrackDto) {
         val history = getHistory().toMutableList()

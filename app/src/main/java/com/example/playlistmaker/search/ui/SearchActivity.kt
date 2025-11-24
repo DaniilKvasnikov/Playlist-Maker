@@ -12,25 +12,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.core.view.marginTop
 import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.internal.ViewUtils.hideKeyboard
-import com.example.playlistmaker.search.ui.models.TrackUI
-import com.example.playlistmaker.player.ui.AudioPlayerActivity
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.player.ui.AudioPlayerActivity
+import com.example.playlistmaker.search.ui.models.TrackUI
+import com.google.android.material.internal.ViewUtils.hideKeyboard
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
-    private val viewModel: SearchViewModel by lazy {
-        ViewModelProvider(
-            this,
-            Creator.provideSearchViewModelFactory()
-        )[SearchViewModel::class.java]
-    }
+    private val viewModel by viewModel<SearchViewModel>()
 
     private lateinit var binding: ActivitySearchBinding
     private var stringInput: String = ""

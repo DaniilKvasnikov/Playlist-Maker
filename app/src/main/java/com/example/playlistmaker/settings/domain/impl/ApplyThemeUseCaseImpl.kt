@@ -1,6 +1,6 @@
 package com.example.playlistmaker.settings.domain.impl
 
-import com.example.playlistmaker.settings.data.applier.ThemeApplier
+import com.example.playlistmaker.settings.domain.applier.ThemeApplier
 import com.example.playlistmaker.settings.domain.api.ApplyThemeUseCase
 import com.example.playlistmaker.settings.domain.api.SettingsRepository
 import com.example.playlistmaker.settings.domain.models.ThemeSettings
@@ -12,6 +12,6 @@ class ApplyThemeUseCaseImpl(
 
     override fun invoke(isDark: Boolean) {
         settingsRepository.saveThemeSettings(ThemeSettings(isDark))
-        themeApplier.applyTheme(isDark)
+        themeApplier.applyTheme()
     }
 }

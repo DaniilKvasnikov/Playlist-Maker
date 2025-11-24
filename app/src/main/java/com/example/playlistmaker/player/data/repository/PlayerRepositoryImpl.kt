@@ -1,14 +1,17 @@
 package com.example.playlistmaker.player.data.repository
 
 import android.media.MediaPlayer
+import com.example.playlistmaker.player.domain.api.MediaPlayerFactory
 import com.example.playlistmaker.player.domain.api.PlayerRepository
 
-class PlayerRepositoryImpl : PlayerRepository {
+class PlayerRepositoryImpl(
+    private val mediaPlayerFactory: MediaPlayerFactory
+) : PlayerRepository {
     private var mediaPlayer: MediaPlayer? = null
 
     override fun preparePlayer(url: String, onPrepared: () -> Unit, onCompletion: () -> Unit) {
         if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer()
+            mediaPlayer = mediaPlayerFactory.create()
         }
         mediaPlayer?.apply {
             reset()
@@ -32,7 +35,7 @@ class PlayerRepositoryImpl : PlayerRepository {
     }
 
     override fun release() {
-        mediaPlayer?.release()
+        mediaPlayer?.let { mediaPlayerFactory.release(it) }
         mediaPlayer = null
     }
 

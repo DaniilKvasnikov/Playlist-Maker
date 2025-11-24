@@ -5,18 +5,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
-    private val viewModel: SettingsViewModel by lazy {
-        ViewModelProvider(
-            this,
-            Creator.provideSettingsViewModelFactory()
-        )[SettingsViewModel::class.java]
-    }
+    private val viewModel by viewModel<SettingsViewModel>()
 
     private lateinit var binding: ActivitySettingsBinding
 
