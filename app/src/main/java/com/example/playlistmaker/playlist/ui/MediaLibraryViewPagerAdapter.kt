@@ -1,8 +1,11 @@
-package com.example.playlistmaker.playlist
+package com.example.playlistmaker.playlist.ui
+
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.playlistmaker.playlist.ui.fragments.FeaturedTracksFragment
+import com.example.playlistmaker.playlist.ui.fragments.PlaylistFragment
 
 class MediaLibraryViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle)
     : FragmentStateAdapter(fragmentManager, lifecycle) {
@@ -12,8 +15,8 @@ class MediaLibraryViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: 
 
     override fun createFragment(position: Int): Fragment {
         return when(position) {
-            0 -> FeaturedTracksFragment.newInstance()
-            else -> PlaylistFragment.newInstance()
+            0 -> FeaturedTracksFragment.Companion.newInstance()
+            else -> PlaylistFragment.Companion.newInstance()
         }
     }
 }

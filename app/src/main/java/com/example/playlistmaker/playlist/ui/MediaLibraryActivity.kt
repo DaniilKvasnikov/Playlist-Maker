@@ -7,7 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaLibraryBinding
-import com.example.playlistmaker.playlist.MediaLibraryViewPagerAdapter
+import com.example.playlistmaker.playlist.ui.MediaLibraryViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MediaLibraryActivity : AppCompatActivity() {
