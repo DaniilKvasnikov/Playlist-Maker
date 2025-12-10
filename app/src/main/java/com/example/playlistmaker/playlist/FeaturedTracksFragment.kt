@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.FragmentFeaturedTracksBinding
+import com.example.playlistmaker.playlist.ui.fragments.FeaturedTracksViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FeaturedTracksFragment : Fragment() {
 
@@ -13,6 +15,7 @@ class FeaturedTracksFragment : Fragment() {
         fun newInstance() = FeaturedTracksFragment()
     }
     private lateinit var binding: FragmentFeaturedTracksBinding
+    private val viewModel by viewModel<FeaturedTracksViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
