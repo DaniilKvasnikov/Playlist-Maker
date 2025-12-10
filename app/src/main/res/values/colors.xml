@@ -21,5 +21,6 @@
     <color name="not_found_icon">#1A1B22</color>
     <color name="not_found_text_refresh">#FFFFFF</color>
     <color name="button_background_transparent">#401A1B22</color>
+    <color name="media_library_menu_text">#1A1B22</color>
 
 </resources>

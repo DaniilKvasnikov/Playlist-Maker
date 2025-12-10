@@ -1,9 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".playlist.ui.MediaLibraryActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/panel_header"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/background_settings"
+        app:navigationIcon="@drawable/ic_back_16"
+        app:title="@string/media_library"
+        app:titleTextAppearance="@style/HeaderTitleStyle"
+        app:titleTextColor="@color/text_color_header_settings" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabTextAppearance="@style/MyTabTextStyle"
+        app:tabTextColor="@color/text_color_header_settings"
+        app:tabIndicatorColor="@color/button_back_settings"
+        app:tabIndicatorHeight="2dp"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
