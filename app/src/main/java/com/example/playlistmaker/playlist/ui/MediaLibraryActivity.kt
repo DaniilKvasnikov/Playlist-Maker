@@ -10,13 +10,14 @@ import com.example.playlistmaker.databinding.ActivityMediaLibraryBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MediaLibraryActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMediaLibraryBinding
+    private var _binding: ActivityMediaLibraryBinding? = null
+    private val binding get() = _binding!!
     private lateinit var tabMediator: TabLayoutMediator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityMediaLibraryBinding.inflate(layoutInflater)
+        _binding = ActivityMediaLibraryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.viewPager.adapter = MediaLibraryViewPagerAdapter(supportFragmentManager, lifecycle)
@@ -38,5 +39,10 @@ class MediaLibraryActivity : AppCompatActivity() {
         binding.panelHeader.setNavigationOnClickListener {
             finish()
         }
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 }

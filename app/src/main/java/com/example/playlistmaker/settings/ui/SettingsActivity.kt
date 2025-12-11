@@ -12,12 +12,13 @@ class SettingsActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<SettingsViewModel>()
 
-    private lateinit var binding: ActivitySettingsBinding
+    private var _binding: ActivitySettingsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        _binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
@@ -63,5 +64,10 @@ class SettingsActivity : AppCompatActivity() {
                 binding.switchTheme.isChecked = state.settings.isDarkTheme
             }
         }
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 }
