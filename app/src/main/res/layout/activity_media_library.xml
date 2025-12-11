@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/background_settings"
     tools:context=".playlist.ui.MediaLibraryActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -27,6 +28,7 @@
         app:tabTextAppearance="@style/MyTabTextStyle"
         app:tabTextColor="@color/text_color_header_settings"
         app:tabIndicatorColor="@color/button_back_settings"
+        android:background="@color/background_settings"
         app:tabIndicatorHeight="2dp"/>
 
     <androidx.viewpager2.widget.ViewPager2
