@@ -21,14 +21,15 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<AudioPlayerViewModel>()
 
-    private lateinit var binding: ActivityAudioPlayerBinding
+    private var _binding: ActivityAudioPlayerBinding? = null
+    private val binding get() = _binding!!
 
     private val timeFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
+        _binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
@@ -151,6 +152,11 @@ class AudioPlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.pause()
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
     companion object {

@@ -26,7 +26,9 @@ class SearchActivity : AppCompatActivity() {
 
     private val viewModel by viewModel<SearchViewModel>()
 
-    private lateinit var binding: ActivitySearchBinding
+
+    private var _binding: ActivitySearchBinding? = null
+    private val binding get() = _binding!!
     private var stringInput: String = ""
     private lateinit var historyAdapter: TrackAdapter
     private val historyData = mutableListOf<TrackUI>()
@@ -40,7 +42,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivitySearchBinding.inflate(layoutInflater)
+        _binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
@@ -239,6 +241,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        _binding = null
         searchRunnable?.let { searchHandler.removeCallbacks(it) }
         super.onDestroy()
     }

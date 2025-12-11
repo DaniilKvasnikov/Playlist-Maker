@@ -31,16 +31,6 @@ class TrackAdapter(
 
     class TrackViewHolder(private val binding: ItemTrackBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        companion object {
-            private const val ARTWORK_CORNER_RADIUS_DP = 2
-
-            fun from(parent: ViewGroup): TrackViewHolder {
-                val inflater = LayoutInflater.from(parent.context)
-                val binding = ItemTrackBinding.inflate(inflater, parent, false)
-                return TrackViewHolder(binding)
-            }
-        }
-
         fun bind(track: TrackUI) {
             binding.tvTitle.text = track.trackName
             binding.tvSubtitle.text = track.artistName
@@ -67,6 +57,16 @@ class TrackAdapter(
 
         private fun Int.toPx(view: View): Int {
             return (this * view.resources.displayMetrics.density).toInt()
+        }
+
+        companion object {
+            private const val ARTWORK_CORNER_RADIUS_DP = 2
+
+            fun from(parent: ViewGroup): TrackViewHolder {
+                val inflater = LayoutInflater.from(parent.context)
+                val binding = ItemTrackBinding.inflate(inflater, parent, false)
+                return TrackViewHolder(binding)
+            }
         }
     }
 }

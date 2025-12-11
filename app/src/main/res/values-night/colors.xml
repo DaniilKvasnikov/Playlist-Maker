@@ -15,4 +15,5 @@
     <color name="not_found_icon">#FFFFFF</color>
     <color name="not_found_text_refresh">#1A1B22</color>
     <color name="button_background_transparent">#40FFFFFF</color>
+    <color name="media_library_menu_text">#BDBDBD</color>
 </resources>

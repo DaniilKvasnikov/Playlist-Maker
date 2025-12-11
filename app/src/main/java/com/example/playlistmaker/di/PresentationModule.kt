@@ -1,6 +1,8 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.player.ui.AudioPlayerViewModel
+import com.example.playlistmaker.playlist.ui.fragments.FeaturedTracksViewModel
+import com.example.playlistmaker.playlist.ui.fragments.PlaylistViewModel
 import com.example.playlistmaker.search.ui.SearchViewModel
 import com.example.playlistmaker.settings.ui.SettingsViewModel
 import org.koin.core.module.dsl.viewModel
@@ -36,5 +38,13 @@ val presentationModule = module {
             openSupportUseCase = get(),
             openTermsUseCase = get()
         )
+    }
+
+    viewModel {
+        FeaturedTracksViewModel()
+    }
+
+    viewModel {
+        PlaylistViewModel()
     }
 }
