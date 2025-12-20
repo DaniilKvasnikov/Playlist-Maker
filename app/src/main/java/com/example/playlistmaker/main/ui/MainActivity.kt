@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
                 2 -> tab.text = getString(R.string.text_settings)
             }
         }.attach()
+        binding.tabLayout.getTabAt(1)?.select()
     }
 
     override fun onDestroy() {

@@ -40,6 +40,10 @@ class AudioPlayerActivity : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.toolbar.setNavigationOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
         binding.playButton.setOnClickListener {
             viewModel.playPause()
         }

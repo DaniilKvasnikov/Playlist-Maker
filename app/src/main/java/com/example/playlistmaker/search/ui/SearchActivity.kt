@@ -14,6 +14,7 @@ import androidx.core.view.marginTop
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.AudioPlayerActivity
 import com.example.playlistmaker.search.ui.models.TrackUI
@@ -226,10 +227,17 @@ class SearchActivity : Fragment() {
     private fun openAudioPlayer(track: TrackUI) {
         hideKeyboard(binding.edittextSearch)
         val fragment = AudioPlayerActivity.newInstance(track)
+        requireActivity().findViewById<View>(R.id.fragmentContainer)?.visibility = View.VISIBLE
         parentFragmentManager.beginTransaction()
-            .replace(android.R.id.content, fragment)
+            .replace(R.id.fragmentContainer, fragment)
             .addToBackStack(null)
             .commit()
+
+        parentFragmentManager.addOnBackStackChangedListener {
+            if (parentFragmentManager.backStackEntryCount == 0) {
+                requireActivity().findViewById<View>(R.id.fragmentContainer)?.visibility = View.GONE
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
