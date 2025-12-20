@@ -2,11 +2,13 @@ package com.example.playlistmaker.player.ui
 
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -17,7 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AudioPlayerActivity : AppCompatActivity() {
+class AudioPlayerActivity : Fragment() {
 
     private val viewModel by viewModel<AudioPlayerViewModel>()
 
@@ -26,44 +28,31 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private val timeFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        _binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = ActivityAudioPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.playButton.setOnClickListener {
+            viewModel.playPause()
+        }
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            render(state)
         }
 
-        setupListeners()
-        observeViewModel()
-
-        val track = getTrackFromIntent()
+        val track = getTrackFromArguments()
         track?.let {
             displayTrackInfo(it)
             viewModel.preparePlayer(it)
         }
     }
-
-    private fun setupListeners() {
-        binding.toolbar.setNavigationOnClickListener {
-            finish()
-        }
-
-        binding.playButton.setOnClickListener {
-            viewModel.playPause()
-        }
-    }
-
-    private fun observeViewModel() {
-        viewModel.state.observe(this) { state ->
-            render(state)
-        }
-    }
-
     private fun render(state: AudioPlayerState) {
         when (state) {
             is AudioPlayerState.Prepared -> {
@@ -117,7 +106,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
 
         val artworkUrl512 = track.getArtworkUrl512()
-        Glide.with(this)
+        Glide.with(requireContext())
             .load(artworkUrl512)
             .apply(RequestOptions().transform(RoundedCorners(ARTWORK_CORNER_RADIUS_DP.toPx())))
             .placeholder(R.drawable.ic_placeholder_45)
@@ -136,12 +125,12 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun getTrackFromIntent(): TrackUI? {
+    private fun getTrackFromArguments(): TrackUI? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(TRACK_KEY, TrackUI::class.java)
+            arguments?.getParcelable(TRACK_KEY, TrackUI::class.java)
         } else {
             @Suppress("DEPRECATION")
-            intent.getParcelableExtra(TRACK_KEY)
+            arguments?.getParcelable(TRACK_KEY)
         }
     }
 
@@ -154,13 +143,21 @@ class AudioPlayerActivity : AppCompatActivity() {
         viewModel.pause()
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         _binding = null
-        super.onDestroy()
+        super.onDestroyView()
     }
 
     companion object {
-        const val TRACK_KEY = "TRACK"
+        private const val TRACK_KEY = "TRACK"
         private const val ARTWORK_CORNER_RADIUS_DP = 8
+
+        fun newInstance(track: TrackUI): AudioPlayerActivity {
+            return AudioPlayerActivity().apply {
+                arguments = Bundle().apply {
+                    putParcelable(TRACK_KEY, track)
+                }
+            }
+        }
     }
 }

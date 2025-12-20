@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/background_settings"
-        app:navigationIcon="@drawable/ic_back_16"
         app:title="@string/text_search"
         app:titleTextAppearance="@style/HeaderTitleStyle"
         app:titleTextColor="@color/text_color_header_settings" />
