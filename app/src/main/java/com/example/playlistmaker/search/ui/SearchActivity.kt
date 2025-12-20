@@ -224,6 +224,7 @@ class SearchActivity : Fragment() {
     }
 
     private fun openAudioPlayer(track: TrackUI) {
+        hideKeyboard(binding.edittextSearch)
         val fragment = AudioPlayerActivity.newInstance(track)
         parentFragmentManager.beginTransaction()
             .replace(android.R.id.content, fragment)
