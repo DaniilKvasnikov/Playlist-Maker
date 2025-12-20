@@ -8,8 +8,12 @@ import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMediaLibraryBinding
 import com.google.android.material.tabs.TabLayoutMediator
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MediaLibraryActivity : Fragment() {
+
+    private val viewModel by viewModel<MediaLibraryViewModel>()
+
     private var _binding: ActivityMediaLibraryBinding? = null
     private val binding get() = _binding!!
 
