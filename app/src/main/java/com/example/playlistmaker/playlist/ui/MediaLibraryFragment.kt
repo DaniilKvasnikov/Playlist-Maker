@@ -10,7 +10,7 @@ import com.example.playlistmaker.databinding.ActivityMediaLibraryBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MediaLibraryActivity : Fragment() {
+class MediaLibraryFragment : Fragment() {
 
     private val viewModel by viewModel<MediaLibraryViewModel>()
 
@@ -45,6 +45,6 @@ class MediaLibraryActivity : Fragment() {
     }
 
     companion object {
-        fun newInstance() = MediaLibraryActivity()
+        fun newInstance() = MediaLibraryFragment()
     }
 }

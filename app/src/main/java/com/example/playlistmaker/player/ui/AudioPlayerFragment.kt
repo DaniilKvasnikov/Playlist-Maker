@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AudioPlayerActivity : Fragment() {
+class AudioPlayerFragment : Fragment() {
 
     private val viewModel by viewModel<AudioPlayerViewModel>()
 
@@ -51,7 +51,7 @@ class AudioPlayerActivity : Fragment() {
             render(state)
         }
 
-        val track = AudioPlayerActivityArgs.fromBundle(requireArguments()).track
+        val track = AudioPlayerFragmentArgs.fromBundle(requireArguments()).track
         displayTrackInfo(track)
         viewModel.preparePlayer(track)
     }

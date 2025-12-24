@@ -21,7 +21,7 @@ import com.example.playlistmaker.search.ui.models.TrackUI
 import com.google.android.material.internal.ViewUtils.hideKeyboard
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : Fragment() {
+class SearchFragment : Fragment() {
 
     private val viewModel by viewModel<SearchViewModel>()
 
@@ -226,7 +226,7 @@ class SearchActivity : Fragment() {
 
     private fun openAudioPlayer(track: TrackUI) {
         hideKeyboard(binding.edittextSearch)
-        val action = SearchActivityDirections.actionSearchToPlayer(track)
+        val action = SearchFragmentDirections.actionSearchToPlayer(track)
         findNavController().navigate(action)
     }
 
@@ -247,6 +247,6 @@ class SearchActivity : Fragment() {
         private const val STRING_INPUT = "STRING_INPUT"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICK_DEBOUNCE_DELAY = 500L
-        fun newInstance() = SearchActivity()
+        fun newInstance() = SearchFragment()
     }
 }

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : Fragment() {
+class SettingsFragment : Fragment() {
 
     private val viewModel by viewModel<SettingsViewModel>()
 
@@ -68,6 +68,6 @@ class SettingsActivity : Fragment() {
     }
 
     companion object {
-        fun newInstance() = SettingsActivity()
+        fun newInstance() = SettingsFragment()
     }
 }
