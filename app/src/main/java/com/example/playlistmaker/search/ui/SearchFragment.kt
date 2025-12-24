@@ -1,28 +1,26 @@
 package com.example.playlistmaker.search.ui
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.player.ui.AudioPlayerActivity
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.google.android.material.internal.ViewUtils.hideKeyboard
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
     private val viewModel by viewModel<SearchViewModel>()
 
@@ -38,17 +36,22 @@ class SearchActivity : AppCompatActivity() {
     private var searchRunnable: Runnable? = null
     private var lastClickTime = 0L
 
-    @SuppressLint("RestrictedApi", "NotifyDataSetChanged")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        _binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = ActivitySearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+    @SuppressLint("RestrictedApi", "NotifyDataSetChanged")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        savedInstanceState?.let {
+            stringInput = it.getString(STRING_INPUT, "")
+            binding.edittextSearch.setText(stringInput)
         }
 
         initViews()
@@ -58,9 +61,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        binding.panelHeader.setOnClickListener {
-            finish()
-        }
 
         binding.buttonClear.visibility = View.GONE
 
@@ -70,7 +70,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerViews() {
-        binding.recycler.layoutManager = LinearLayoutManager(this)
+        binding.recycler.layoutManager = LinearLayoutManager(requireContext())
         val adapter = TrackAdapter(data) { track ->
             if (isClickAllowed()) {
                 viewModel.saveToHistory(track)
@@ -79,7 +79,7 @@ class SearchActivity : AppCompatActivity() {
         }
         binding.recycler.adapter = adapter
 
-        binding.historyRecycler.layoutManager = LinearLayoutManager(this)
+        binding.historyRecycler.layoutManager = LinearLayoutManager(requireContext())
         historyAdapter = TrackAdapter(historyData) { track ->
             if (isClickAllowed()) {
                 viewModel.saveToHistory(track)
@@ -140,7 +140,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.state.observe(this) { state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             render(state)
         }
     }
@@ -224,9 +224,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun openAudioPlayer(track: TrackUI) {
-        val intent = Intent(this, AudioPlayerActivity::class.java)
-        intent.putExtra(AudioPlayerActivity.TRACK_KEY, track)
-        startActivity(intent)
+        hideKeyboard(binding.edittextSearch)
+        val action = SearchFragmentDirections.actionSearchToPlayer(track)
+        findNavController().navigate(action)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -234,16 +234,10 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(STRING_INPUT, stringInput)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        stringInput = savedInstanceState.getString(STRING_INPUT, "")
-        binding.edittextSearch.setText(stringInput)
-    }
-
-    override fun onDestroy() {
+    override fun onDestroyView() {
         _binding = null
         searchRunnable?.let { searchHandler.removeCallbacks(it) }
-        super.onDestroy()
+        super.onDestroyView()
     }
 
     enum class State { CONTENT, EMPTY, ERROR, HISTORY, NONE, LOADING }
@@ -252,5 +246,6 @@ class SearchActivity : AppCompatActivity() {
         private const val STRING_INPUT = "STRING_INPUT"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICK_DEBOUNCE_DELAY = 500L
+        fun newInstance() = SearchFragment()
     }
 }
