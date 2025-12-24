@@ -2,5 +2,4 @@ package com.example.playlistmaker.playlist.ui
 
 import androidx.lifecycle.ViewModel
 
-class MediaLibraryViewModel : ViewModel() {
-}
+class MediaLibraryViewModel : ViewModel()
