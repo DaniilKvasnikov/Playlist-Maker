@@ -13,10 +13,10 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.player.ui.AudioPlayerActivity
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.google.android.material.internal.ViewUtils.hideKeyboard
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -226,18 +226,8 @@ class SearchActivity : Fragment() {
 
     private fun openAudioPlayer(track: TrackUI) {
         hideKeyboard(binding.edittextSearch)
-        val fragment = AudioPlayerActivity.newInstance(track)
-        requireActivity().findViewById<View>(R.id.fragmentContainer)?.visibility = View.VISIBLE
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
-            .addToBackStack(null)
-            .commit()
-
-        parentFragmentManager.addOnBackStackChangedListener {
-            if (parentFragmentManager.backStackEntryCount == 0) {
-                requireActivity().findViewById<View>(R.id.fragmentContainer)?.visibility = View.GONE
-            }
-        }
+        val action = SearchActivityDirections.actionSearchToPlayer(track)
+        findNavController().navigate(action)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

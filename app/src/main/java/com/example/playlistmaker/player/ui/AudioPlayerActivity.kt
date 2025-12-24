@@ -41,7 +41,7 @@ class AudioPlayerActivity : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.toolbar.setNavigationOnClickListener {
-            parentFragmentManager.popBackStack()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         binding.playButton.setOnClickListener {
@@ -51,11 +51,9 @@ class AudioPlayerActivity : Fragment() {
             render(state)
         }
 
-        val track = getTrackFromArguments()
-        track?.let {
-            displayTrackInfo(it)
-            viewModel.preparePlayer(it)
-        }
+        val track = AudioPlayerActivityArgs.fromBundle(requireArguments()).track
+        displayTrackInfo(track)
+        viewModel.preparePlayer(track)
     }
     private fun render(state: AudioPlayerState) {
         when (state) {
@@ -129,15 +127,6 @@ class AudioPlayerActivity : Fragment() {
         }
     }
 
-    private fun getTrackFromArguments(): TrackUI? {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelable(TRACK_KEY, TrackUI::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            arguments?.getParcelable(TRACK_KEY)
-        }
-    }
-
     private fun Int.toPx(): Int {
         return (this * resources.displayMetrics.density).toInt()
     }
@@ -153,15 +142,6 @@ class AudioPlayerActivity : Fragment() {
     }
 
     companion object {
-        private const val TRACK_KEY = "TRACK"
         private const val ARTWORK_CORNER_RADIUS_DP = 8
-
-        fun newInstance(track: TrackUI): AudioPlayerActivity {
-            return AudioPlayerActivity().apply {
-                arguments = Bundle().apply {
-                    putParcelable(TRACK_KEY, track)
-                }
-            }
-        }
     }
 }
