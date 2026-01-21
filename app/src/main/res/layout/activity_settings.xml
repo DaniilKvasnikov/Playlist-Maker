@@ -15,7 +15,6 @@
         android:layout_gravity="start"
         android:visibility="visible"
         android:fontFamily="@font/ys_display_regular"
-        app:navigationIcon="@drawable/ic_back_16"
         app:title="@string/text_settings"
         app:titleTextAppearance="@style/HeaderTitleStyle"
         app:titleTextColor="@color/text_color_header_settings" />
