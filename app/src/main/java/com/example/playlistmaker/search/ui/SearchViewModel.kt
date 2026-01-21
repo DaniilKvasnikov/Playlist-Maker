@@ -28,15 +28,17 @@ class SearchViewModel(
 
         viewModelScope.launch {
             searchTracksUseCase(query)
-                .onSuccess { tracks ->
-                    _state.value = if (tracks.isEmpty()) {
-                        SearchState.Empty
-                    } else {
-                        SearchState.Content(tracks.toUI())
+                .collect { result ->
+                    result.onSuccess { tracks ->
+                        _state.value = if (tracks.isEmpty()) {
+                            SearchState.Empty
+                        } else {
+                            SearchState.Content(tracks.toUI())
+                        }
                     }
-                }
-                .onFailure {
-                    _state.value = SearchState.Error
+                    .onFailure {
+                        _state.value = SearchState.Error
+                    }
                 }
         }
     }
