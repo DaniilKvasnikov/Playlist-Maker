@@ -27,5 +27,5 @@ class TracksRepositoryImpl(
         } catch (e: Exception) {
             emit(Result.failure(e))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 }
