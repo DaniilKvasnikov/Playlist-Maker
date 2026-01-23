@@ -3,15 +3,19 @@ package com.example.playlistmaker.search.domain.impl
 import com.example.playlistmaker.search.domain.api.SearchTracksUseCase
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 
 class SearchTracksUseCaseImpl(
     private val tracksRepository: TracksRepository
 ) : SearchTracksUseCase {
 
-    override suspend fun invoke(query: String): Result<List<Track>> {
+    override fun invoke(query: String): Flow<Result<List<Track>>> = flow {
         if (query.isBlank()) {
-            return Result.failure(IllegalArgumentException("Query cannot be blank"))
+            emit(Result.failure(IllegalArgumentException("Query cannot be blank")))
+        } else {
+            emitAll(tracksRepository.searchTracks(query))
         }
-        return tracksRepository.searchTracks(query)
     }
 }

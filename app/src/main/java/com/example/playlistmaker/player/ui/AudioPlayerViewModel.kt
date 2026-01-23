@@ -102,6 +102,6 @@ class AudioPlayerViewModel(
     }
 
     companion object {
-        private const val UPDATE_INTERVAL = 500L
+        private const val UPDATE_INTERVAL = 300L
     }
 }
