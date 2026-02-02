@@ -14,7 +14,8 @@ fun Track.toUI(): TrackUI {
         releaseDate = this.releaseDate,
         primaryGenreName = this.primaryGenreName,
         country = this.country,
-        previewUrl = this.previewUrl
+        previewUrl = this.previewUrl,
+        isFavorite = this.isFavorite
     )
 }
 
@@ -29,7 +30,8 @@ fun TrackUI.toDomain(): Track {
         releaseDate = this.releaseDate,
         primaryGenreName = this.primaryGenreName,
         country = this.country,
-        previewUrl = this.previewUrl
+        previewUrl = this.previewUrl,
+        isFavorite = this.isFavorite
     )
 }
 
