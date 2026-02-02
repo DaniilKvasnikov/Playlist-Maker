@@ -44,13 +44,31 @@ class AudioPlayerFragment : Fragment() {
         binding.playButton.setOnClickListener {
             viewModel.playPause()
         }
+
+        binding.addToFavoritesButton.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
+
         viewModel.state.observe(viewLifecycleOwner) { state ->
             render(state)
+        }
+
+        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
+            updateFavoriteButton(isFavorite)
         }
 
         val track = AudioPlayerFragmentArgs.fromBundle(requireArguments()).track
         displayTrackInfo(track)
         viewModel.preparePlayer(track)
+    }
+
+    private fun updateFavoriteButton(isFavorite: Boolean) {
+        val iconRes = if (isFavorite) {
+            R.drawable.ic_like_button_filled_25
+        } else {
+            R.drawable.ic_like_button_25
+        }
+        binding.addToFavoritesButton.setImageResource(iconRes)
     }
     private fun render(state: AudioPlayerState) {
         when (state) {
