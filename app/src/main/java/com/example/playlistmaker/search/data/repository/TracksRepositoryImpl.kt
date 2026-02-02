@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.data.repository
 
+import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.search.data.mapper.TrackMapper
 import com.example.playlistmaker.search.data.network.ITunesApiService
 import com.example.playlistmaker.search.domain.api.TracksRepository
@@ -11,7 +12,8 @@ import kotlinx.coroutines.flow.flowOn
 
 class TracksRepositoryImpl(
     private val apiService: ITunesApiService,
-    private val mapper: TrackMapper
+    private val mapper: TrackMapper,
+    private val appDatabase: AppDatabase
 ) : TracksRepository {
 
     override fun searchTracks(query: String): Flow<Result<List<Track>>> = flow {
@@ -22,6 +24,12 @@ class TracksRepositoryImpl(
                 val tracks = body?.results?.let {
                     mapper.mapDtoListToDomainList(it)
                 } ?: emptyList()
+
+                val favoriteIds = appDatabase.favoriteTrackDao().getTrackIds()
+                tracks.forEach { track ->
+                    track.isFavorite = favoriteIds.contains(track.trackId)
+                }
+
                 emit(Result.success(tracks))
             } else {
                 emit(Result.failure(Exception("API Error: ${response.code()}")))
