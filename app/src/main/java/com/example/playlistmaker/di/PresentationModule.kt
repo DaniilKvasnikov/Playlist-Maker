@@ -1,8 +1,8 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.favorites.ui.FavoritesViewModel
 import com.example.playlistmaker.player.ui.AudioPlayerViewModel
 import com.example.playlistmaker.playlist.ui.MediaLibraryViewModel
-import com.example.playlistmaker.playlist.ui.fragments.FeaturedTracksViewModel
 import com.example.playlistmaker.playlist.ui.fragments.PlaylistViewModel
 import com.example.playlistmaker.search.ui.SearchViewModel
 import com.example.playlistmaker.settings.ui.SettingsViewModel
@@ -26,7 +26,8 @@ val presentationModule = module {
             pauseUseCase = get(),
             releasePlayerUseCase = get(),
             getCurrentPositionUseCase = get(),
-            isPlayingUseCase = get()
+            isPlayingUseCase = get(),
+            favoritesInteractor = get()
         )
     }
 
@@ -46,7 +47,7 @@ val presentationModule = module {
     }
 
     viewModel {
-        FeaturedTracksViewModel()
+        FavoritesViewModel(favoritesInteractor = get())
     }
 
     viewModel {

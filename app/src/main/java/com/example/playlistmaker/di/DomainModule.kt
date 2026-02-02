@@ -1,5 +1,7 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.favorites.domain.api.FavoritesInteractor
+import com.example.playlistmaker.favorites.domain.impl.FavoritesInteractorImpl
 import com.example.playlistmaker.player.domain.api.GetCurrentPositionUseCase
 import com.example.playlistmaker.player.domain.api.IsPlayingUseCase
 import com.example.playlistmaker.player.domain.api.PauseUseCase
@@ -100,5 +102,9 @@ val domainModule = module {
 
     factory<OpenTermsUseCase> {
         OpenTermsUseCaseImpl(get())
+    }
+
+    factory<FavoritesInteractor> {
+        FavoritesInteractorImpl(get())
     }
 }
