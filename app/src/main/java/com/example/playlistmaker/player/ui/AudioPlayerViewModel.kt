@@ -4,12 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.favorites.domain.api.FavoritesInteractor
 import com.example.playlistmaker.player.domain.api.GetCurrentPositionUseCase
 import com.example.playlistmaker.player.domain.api.IsPlayingUseCase
 import com.example.playlistmaker.player.domain.api.PauseUseCase
 import com.example.playlistmaker.player.domain.api.PlayUseCase
 import com.example.playlistmaker.player.domain.api.PreparePlayerUseCase
 import com.example.playlistmaker.player.domain.api.ReleasePlayerUseCase
+import com.example.playlistmaker.search.ui.mappers.toDomain
 import com.example.playlistmaker.search.ui.models.TrackUI
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -22,17 +24,22 @@ class AudioPlayerViewModel(
     private val pauseUseCase: PauseUseCase,
     private val releasePlayerUseCase: ReleasePlayerUseCase,
     private val getCurrentPositionUseCase: GetCurrentPositionUseCase,
-    private val isPlayingUseCase: IsPlayingUseCase
+    private val isPlayingUseCase: IsPlayingUseCase,
+    private val favoritesInteractor: FavoritesInteractor
 ) : ViewModel() {
 
     private val _state = MutableLiveData<AudioPlayerState>()
     val state: LiveData<AudioPlayerState> = _state
+
+    private val _isFavorite = MutableLiveData<Boolean>()
+    val isFavorite: LiveData<Boolean> = _isFavorite
 
     private var currentTrack: TrackUI? = null
     private var updateJob: Job? = null
 
     fun preparePlayer(track: TrackUI) {
         currentTrack = track
+        _isFavorite.value = track.isFavorite
         preparePlayerUseCase(
             url = track.previewUrl,
             onPrepared = {
@@ -42,6 +49,20 @@ class AudioPlayerViewModel(
                 onCompletion()
             }
         )
+    }
+
+    fun onFavoriteClicked() {
+        val track = currentTrack ?: return
+        val currentFavorite = _isFavorite.value ?: false
+
+        viewModelScope.launch {
+            if (currentFavorite) {
+                favoritesInteractor.removeFromFavorites(track.trackId)
+            } else {
+                favoritesInteractor.addToFavorites(track.toDomain())
+            }
+            _isFavorite.postValue(!currentFavorite)
+        }
     }
 
     fun playPause() {
