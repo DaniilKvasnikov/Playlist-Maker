@@ -2,8 +2,6 @@ package com.example.playlistmaker.search.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +11,12 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.google.android.material.internal.ViewUtils.hideKeyboard
@@ -32,9 +34,8 @@ class SearchFragment : Fragment() {
     private val historyData = mutableListOf<TrackUI>()
     private val data = mutableListOf<TrackUI>()
 
-    private val searchHandler = Handler(Looper.getMainLooper())
-    private var searchRunnable: Runnable? = null
-    private var lastClickTime = 0L
+    private var searchJob: Job? = null
+    private var clickJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,15 +96,15 @@ class SearchFragment : Fragment() {
             binding.buttonClear.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
             stringInput = s.toString()
 
-            searchRunnable?.let { searchHandler.removeCallbacks(it) }
+            searchJob?.cancel()
 
             if (s.isNullOrEmpty()) {
                 showHistoryIfNeeded()
             } else {
-                searchRunnable = Runnable {
+                searchJob = lifecycleScope.launch {
+                    delay(SEARCH_DEBOUNCE_DELAY)
                     viewModel.searchTracks(s.toString())
                 }
-                searchHandler.postDelayed(searchRunnable!!, SEARCH_DEBOUNCE_DELAY)
             }
         }
 
@@ -113,7 +114,7 @@ class SearchFragment : Fragment() {
 
         binding.edittextSearch.setOnEditorActionListener { s, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                searchRunnable?.let { searchHandler.removeCallbacks(it) }
+                searchJob?.cancel()
                 viewModel.searchTracks(s.text.toString())
                 true
             }
@@ -121,7 +122,7 @@ class SearchFragment : Fragment() {
         }
 
         binding.buttonClear.setOnClickListener {
-            searchRunnable?.let { searchHandler.removeCallbacks(it) }
+            searchJob?.cancel()
             binding.edittextSearch.setText("")
             hideKeyboard(binding.edittextSearch)
             data.clear()
@@ -215,11 +216,12 @@ class SearchFragment : Fragment() {
     }
 
     private fun isClickAllowed(): Boolean {
-        val currentTime = System.currentTimeMillis()
-        if (currentTime - lastClickTime < CLICK_DEBOUNCE_DELAY) {
+        if (clickJob?.isActive == true) {
             return false
         }
-        lastClickTime = currentTime
+        clickJob = lifecycleScope.launch {
+            delay(CLICK_DEBOUNCE_DELAY)
+        }
         return true
     }
 
@@ -236,7 +238,7 @@ class SearchFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
-        searchRunnable?.let { searchHandler.removeCallbacks(it) }
+        searchJob?.cancel()
         super.onDestroyView()
     }
 
