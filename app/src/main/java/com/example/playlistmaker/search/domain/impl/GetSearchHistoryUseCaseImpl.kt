@@ -8,7 +8,7 @@ class GetSearchHistoryUseCaseImpl(
     private val searchHistoryRepository: SearchHistoryRepository
 ) : GetSearchHistoryUseCase {
 
-    override fun invoke(): List<Track> {
+    override suspend fun invoke(): List<Track> {
         return searchHistoryRepository.getHistory()
     }
 }

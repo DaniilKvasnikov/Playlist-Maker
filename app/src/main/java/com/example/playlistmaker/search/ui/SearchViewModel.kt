@@ -44,11 +44,13 @@ class SearchViewModel(
     }
 
     fun loadHistory() {
-        val history = getSearchHistoryUseCase()
-        if (history.isNotEmpty()) {
-            _state.value = SearchState.History(history.toUI())
-        } else {
-            _state.value = SearchState.None
+        viewModelScope.launch {
+            val history = getSearchHistoryUseCase()
+            if (history.isNotEmpty()) {
+                _state.value = SearchState.History(history.toUI())
+            } else {
+                _state.value = SearchState.None
+            }
         }
     }
 
