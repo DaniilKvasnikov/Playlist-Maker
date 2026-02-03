@@ -24,7 +24,7 @@ val repositoryModule = module {
     }
 
     single<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(get(), get(), get())
+        SearchHistoryRepositoryImpl(get(), get())
     }
 
     single<FavoritesRepository> {

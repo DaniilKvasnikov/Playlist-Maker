@@ -2,6 +2,7 @@ package com.example.playlistmaker.di
 
 import androidx.room.Room
 import com.example.playlistmaker.data.db.AppDatabase
+import com.example.playlistmaker.data.db.dao.FavoriteTrackDao
 import com.example.playlistmaker.player.domain.api.MediaPlayerFactory
 import com.example.playlistmaker.player.data.factory.AndroidMediaPlayerFactory
 import com.example.playlistmaker.search.data.local.SearchHistoryStorage
@@ -24,6 +25,10 @@ val dataModule = module {
             AppDatabase::class.java,
             "playlist_maker.db"
         ).build()
+    }
+
+    single<FavoriteTrackDao> {
+        get<AppDatabase>().favoriteTrackDao()
     }
     // JSON serialization
     single<Gson> {

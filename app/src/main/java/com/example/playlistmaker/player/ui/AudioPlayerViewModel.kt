@@ -39,7 +39,7 @@ class AudioPlayerViewModel(
 
     fun preparePlayer(track: TrackUI) {
         currentTrack = track
-        _isFavorite.value = track.isFavorite
+        checkIsFavorite(track.trackId)
         preparePlayerUseCase(
             url = track.previewUrl,
             onPrepared = {
@@ -49,6 +49,13 @@ class AudioPlayerViewModel(
                 onCompletion()
             }
         )
+    }
+
+    private fun checkIsFavorite(trackId: Int) {
+        viewModelScope.launch {
+            val isFavorite = favoritesInteractor.isTrackFavorite(trackId)
+            _isFavorite.postValue(isFavorite)
+        }
     }
 
     fun onFavoriteClicked() {
