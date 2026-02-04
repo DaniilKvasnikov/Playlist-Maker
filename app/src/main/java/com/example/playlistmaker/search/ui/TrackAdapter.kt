@@ -12,7 +12,7 @@ import com.example.playlistmaker.databinding.ItemTrackBinding
 import com.example.playlistmaker.search.ui.models.TrackUI
 
 class TrackAdapter(
-    private val items: List<TrackUI>,
+    private var items: List<TrackUI> = emptyList(),
     private val onTrackClick: (TrackUI) -> Unit = {}
 ) : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
 
@@ -27,6 +27,11 @@ class TrackAdapter(
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    fun updateItems(newItems: List<TrackUI>) {
+        items = newItems
+        notifyDataSetChanged()
     }
 
     class TrackViewHolder(private val binding: ItemTrackBinding) : RecyclerView.ViewHolder(binding.root) {

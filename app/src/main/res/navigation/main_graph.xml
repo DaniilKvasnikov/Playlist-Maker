@@ -20,7 +20,15 @@
     <fragment
         android:id="@+id/mediaLibraryFragment"
         android:name="com.example.playlistmaker.playlist.ui.MediaLibraryFragment"
-        android:label="MediaLibraryFragment" />
+        android:label="MediaLibraryFragment">
+        <action
+            android:id="@+id/action_mediaLibrary_to_player"
+            app:destination="@id/audioPlayerFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/settingsFragment"

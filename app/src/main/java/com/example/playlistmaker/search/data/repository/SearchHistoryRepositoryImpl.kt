@@ -10,7 +10,7 @@ class SearchHistoryRepositoryImpl(
     private val mapper: TrackMapper
 ) : SearchHistoryRepository {
 
-    override fun getHistory(): List<Track> {
+    override suspend fun getHistory(): List<Track> {
         return mapper.mapDtoListToDomainList(storage.getHistory())
     }
 
