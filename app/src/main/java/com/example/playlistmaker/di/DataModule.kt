@@ -1,8 +1,12 @@
 package com.example.playlistmaker.di
 
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.db.dao.FavoriteTrackDao
+import com.example.playlistmaker.playlist.data.db.PlaylistDao
+import com.example.playlistmaker.playlist.data.mapper.PlaylistDbConverter
 import com.example.playlistmaker.player.domain.api.MediaPlayerFactory
 import com.example.playlistmaker.player.data.factory.AndroidMediaPlayerFactory
 import com.example.playlistmaker.search.data.local.SearchHistoryStorage
@@ -18,18 +22,41 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+private val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            """CREATE TABLE IF NOT EXISTS playlists (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                name TEXT NOT NULL,
+                description TEXT NOT NULL,
+                imagePath TEXT,
+                trackIds TEXT NOT NULL,
+                trackCount INTEGER NOT NULL
+            )"""
+        )
+    }
+}
+
 val dataModule = module {
     single<AppDatabase> {
         Room.databaseBuilder(
             androidContext(),
             AppDatabase::class.java,
             "playlist_maker.db"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2)
+            .build()
     }
 
     single<FavoriteTrackDao> {
         get<AppDatabase>().favoriteTrackDao()
     }
+
+    single<PlaylistDao> {
+        get<AppDatabase>().playlistDao()
+    }
+
+    single { PlaylistDbConverter(get()) }
     // JSON serialization
     single<Gson> {
         GsonBuilder()

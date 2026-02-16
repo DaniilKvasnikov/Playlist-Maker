@@ -107,4 +107,8 @@ val domainModule = module {
     factory<FavoritesInteractor> {
         FavoritesInteractorImpl(get())
     }
+
+    factory<com.example.playlistmaker.playlist.domain.api.PlaylistInteractor> {
+        com.example.playlistmaker.playlist.domain.impl.PlaylistInteractorImpl(get())
+    }
 }

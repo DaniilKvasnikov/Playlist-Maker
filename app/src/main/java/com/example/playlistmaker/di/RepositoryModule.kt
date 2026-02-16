@@ -44,4 +44,8 @@ val repositoryModule = module {
     single<NavigationRepository> {
         NavigationRepositoryImpl(androidContext())
     }
+
+    single<com.example.playlistmaker.playlist.domain.api.PlaylistRepository> {
+        com.example.playlistmaker.playlist.data.repository.PlaylistRepositoryImpl(get(), get(), androidContext())
+    }
 }
