@@ -17,6 +17,10 @@ class PlaylistInteractorImpl(
         playlistRepository.updatePlaylist(playlist)
     }
 
+    override suspend fun getAllPlaylists(): List<Playlist> {
+        return playlistRepository.getAllPlaylists()
+    }
+
     override fun saveImageToStorage(uri: Uri): String {
         return playlistRepository.saveImageToStorage(uri)
     }

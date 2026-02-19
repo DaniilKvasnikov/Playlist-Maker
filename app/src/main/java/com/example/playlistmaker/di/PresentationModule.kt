@@ -52,7 +52,7 @@ val presentationModule = module {
     }
 
     viewModel {
-        PlaylistViewModel()
+        PlaylistViewModel(playlistInteractor = get())
     }
 
     viewModel {

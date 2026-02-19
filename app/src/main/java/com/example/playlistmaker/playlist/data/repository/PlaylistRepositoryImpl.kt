@@ -26,6 +26,10 @@ class PlaylistRepositoryImpl(
         playlistDao.updatePlaylist(playlistDbConverter.map(playlist))
     }
 
+    override suspend fun getAllPlaylists(): List<Playlist> {
+        return playlistDao.getAllPlaylists().map { playlistDbConverter.map(it) }
+    }
+
     override fun saveImageToStorage(uri: Uri): String {
         val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlist_covers")
         if (!filePath.exists()) {
