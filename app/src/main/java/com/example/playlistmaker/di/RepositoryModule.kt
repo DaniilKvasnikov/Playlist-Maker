@@ -13,6 +13,8 @@ import com.example.playlistmaker.settings.data.impl.NavigationRepositoryImpl
 import com.example.playlistmaker.settings.data.repository.SettingsRepositoryImpl
 import com.example.playlistmaker.settings.domain.api.NavigationRepository
 import com.example.playlistmaker.settings.domain.api.SettingsRepository
+import com.example.playlistmaker.playlist.domain.api.PlaylistRepository
+import com.example.playlistmaker.playlist.data.repository.PlaylistRepositoryImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
@@ -45,7 +47,7 @@ val repositoryModule = module {
         NavigationRepositoryImpl(androidContext())
     }
 
-    single<com.example.playlistmaker.playlist.domain.api.PlaylistRepository> {
-        com.example.playlistmaker.playlist.data.repository.PlaylistRepositoryImpl(get(), get(), get(), androidContext())
+    single<PlaylistRepository> {
+        PlaylistRepositoryImpl(get(), get(), get(), androidContext())
     }
 }

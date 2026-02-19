@@ -70,7 +70,7 @@ class CreatePlaylistFragment : Fragment() {
                 } else {
                     binding.createButton.setBackgroundColor(requireContext().getColor(R.color.item_track_info_play))
                 }
-                viewModel.name = s?.toString() ?: ""
+                viewModel.setName(s?.toString() ?: "")
             }
             override fun afterTextChanged(s: Editable?) {}
         })
@@ -78,7 +78,7 @@ class CreatePlaylistFragment : Fragment() {
         binding.descriptionEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.description = s?.toString() ?: ""
+                viewModel.setDescription(s?.toString() ?: "")
             }
             override fun afterTextChanged(s: Editable?) {}
         })

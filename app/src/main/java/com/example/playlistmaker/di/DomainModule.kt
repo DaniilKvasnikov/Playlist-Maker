@@ -34,6 +34,8 @@ import com.example.playlistmaker.settings.domain.impl.OpenSupportUseCaseImpl
 import com.example.playlistmaker.settings.domain.impl.OpenTermsUseCaseImpl
 import com.example.playlistmaker.settings.domain.impl.SaveThemeSettingsUseCaseImpl
 import com.example.playlistmaker.settings.domain.impl.ShareAppUseCaseImpl
+import com.example.playlistmaker.playlist.domain.api.PlaylistInteractor
+import com.example.playlistmaker.playlist.domain.impl.PlaylistInteractorImpl
 import org.koin.dsl.module
 
 val domainModule = module {
@@ -108,7 +110,7 @@ val domainModule = module {
         FavoritesInteractorImpl(get())
     }
 
-    factory<com.example.playlistmaker.playlist.domain.api.PlaylistInteractor> {
-        com.example.playlistmaker.playlist.domain.impl.PlaylistInteractorImpl(get())
+    factory<PlaylistInteractor> {
+        PlaylistInteractorImpl(get())
     }
 }

@@ -64,15 +64,7 @@ class BottomSheetPlaylistAdapter(
         }
 
         private fun getTrackCountText(count: Int): String {
-            val remainder10 = count % 10
-            val remainder100 = count % 100
-
-            return when {
-                remainder100 in 11..14 -> "$count треков"
-                remainder10 == 1 -> "$count трек"
-                remainder10 in 2..4 -> "$count трека"
-                else -> "$count треков"
-            }
+            return itemView.resources.getQuantityString(R.plurals.track_count, count, count)
         }
     }
 }

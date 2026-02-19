@@ -9,6 +9,12 @@ import com.example.playlistmaker.playlist.domain.api.PlaylistInteractor
 import com.example.playlistmaker.playlist.domain.models.Playlist
 import kotlinx.coroutines.launch
 
+data class CreatePlaylistState(
+    val name: String = "",
+    val description: String = "",
+    val coverUri: Uri? = null
+)
+
 class CreatePlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
@@ -16,30 +22,40 @@ class CreatePlaylistViewModel(
     private val _playlistCreated = MutableLiveData<Pair<String, Long>>()
     val playlistCreated: LiveData<Pair<String, Long>> = _playlistCreated
 
-    private var coverUri: Uri? = null
-    var name: String = ""
-    var description: String = ""
+    private val _state = MutableLiveData(CreatePlaylistState())
+    val state: LiveData<CreatePlaylistState> = _state
+
+    private val currentState get() = _state.value ?: CreatePlaylistState()
+
+    fun setName(name: String) {
+        _state.value = currentState.copy(name = name)
+    }
+
+    fun setDescription(description: String) {
+        _state.value = currentState.copy(description = description)
+    }
 
     fun setCoverUri(uri: Uri) {
-        coverUri = uri
+        _state.value = currentState.copy(coverUri = uri)
     }
 
     fun hasUnsavedData(): Boolean {
-        return coverUri != null || name.isNotBlank() || description.isNotBlank()
+        return currentState.coverUri != null || currentState.name.isNotBlank() || currentState.description.isNotBlank()
     }
 
     fun createPlaylist() {
+        val s = currentState
         viewModelScope.launch {
-            val imagePath = coverUri?.let { playlistInteractor.saveImageToStorage(it) }
+            val imagePath = s.coverUri?.let { playlistInteractor.saveImageToStorage(it) }
             val playlist = Playlist(
-                name = name,
-                description = description,
+                name = s.name,
+                description = s.description,
                 imagePath = imagePath,
                 trackIds = emptyList(),
                 trackCount = 0
             )
             val playlistId = playlistInteractor.addPlaylist(playlist)
-            _playlistCreated.postValue(Pair(name, playlistId))
+            _playlistCreated.postValue(Pair(s.name, playlistId))
         }
     }
 }
