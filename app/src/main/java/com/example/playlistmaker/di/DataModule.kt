@@ -1,8 +1,6 @@
 package com.example.playlistmaker.di
 
 import androidx.room.Room
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.db.dao.FavoriteTrackDao
 import com.example.playlistmaker.playlist.data.db.PlaylistDao
@@ -23,41 +21,6 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-private val MIGRATION_1_2 = object : Migration(1, 2) {
-    override fun migrate(db: SupportSQLiteDatabase) {
-        db.execSQL(
-            """CREATE TABLE IF NOT EXISTS playlists (
-                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                name TEXT NOT NULL,
-                description TEXT NOT NULL,
-                imagePath TEXT,
-                trackIds TEXT NOT NULL,
-                trackCount INTEGER NOT NULL
-            )"""
-        )
-    }
-}
-
-private val MIGRATION_2_3 = object : Migration(2, 3) {
-    override fun migrate(db: SupportSQLiteDatabase) {
-        db.execSQL(
-            """CREATE TABLE IF NOT EXISTS playlist_tracks (
-                trackId INTEGER PRIMARY KEY NOT NULL,
-                trackName TEXT NOT NULL,
-                artistName TEXT NOT NULL,
-                trackTimeMillis INTEGER NOT NULL,
-                artworkUrl100 TEXT NOT NULL,
-                collectionName TEXT,
-                releaseDate TEXT,
-                primaryGenreName TEXT NOT NULL,
-                country TEXT NOT NULL,
-                previewUrl TEXT NOT NULL,
-                addedTimestamp INTEGER NOT NULL
-            )"""
-        )
-    }
-}
-
 val dataModule = module {
     single<AppDatabase> {
         Room.databaseBuilder(
@@ -65,7 +28,7 @@ val dataModule = module {
             AppDatabase::class.java,
             "playlist_maker.db"
         )
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+            .fallbackToDestructiveMigration()
             .build()
     }
 

@@ -9,7 +9,7 @@ import com.example.playlistmaker.playlist.data.db.PlaylistEntity
 import com.example.playlistmaker.playlist.data.db.PlaylistTrackDao
 import com.example.playlistmaker.playlist.data.db.PlaylistTrackEntity
 
-@Database(version = 3, entities = [TrackEntity::class, PlaylistEntity::class, PlaylistTrackEntity::class], exportSchema = false)
+@Database(version = 1, entities = [TrackEntity::class, PlaylistEntity::class, PlaylistTrackEntity::class], exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun favoriteTrackDao(): FavoriteTrackDao
