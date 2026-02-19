@@ -44,7 +44,8 @@ val dataModule = module {
         get<AppDatabase>().playlistTrackDao()
     }
 
-    single { PlaylistDbConverter(get()) }
+    single { PlaylistDbConverter() }
+
     // JSON serialization
     single<Gson> {
         GsonBuilder()

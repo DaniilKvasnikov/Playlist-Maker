@@ -27,7 +27,7 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun getPlaylistById(id: Int): Playlist? {
-        return playlistDao.getPlaylistById(id)?.let { playlistDbConverter.map(it) }
+        return playlistDao.getPlaylistWithTracksById(id)?.let { playlistDbConverter.map(it) }
     }
 
     override suspend fun updatePlaylist(playlist: Playlist) {
@@ -35,19 +35,13 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun getAllPlaylists(): List<Playlist> {
-        return playlistDao.getAllPlaylists().map { playlistDbConverter.map(it) }
+        return playlistDao.getPlaylistsWithTracks().map { playlistDbConverter.map(it) }
     }
 
     override suspend fun addTrackToPlaylist(track: Track, playlist: Playlist) {
-        val updatedTrackIds = playlist.trackIds + track.trackId
-        val updatedPlaylist = playlist.copy(
-            trackIds = updatedTrackIds,
-            trackCount = updatedTrackIds.size
-        )
-        playlistDao.updatePlaylist(playlistDbConverter.map(updatedPlaylist))
-
         playlistTrackDao.insertTrack(
             PlaylistTrackEntity(
+                playlistId = playlist.id,
                 trackId = track.trackId,
                 trackName = track.trackName,
                 artistName = track.artistName,
@@ -61,6 +55,11 @@ class PlaylistRepositoryImpl(
                 addedTimestamp = System.currentTimeMillis()
             )
         )
+
+        val updatedPlaylist = playlist.copy(
+            trackCount = playlist.trackCount + 1
+        )
+        playlistDao.updatePlaylist(playlistDbConverter.map(updatedPlaylist))
     }
 
     override fun saveImageToStorage(uri: Uri): String {
