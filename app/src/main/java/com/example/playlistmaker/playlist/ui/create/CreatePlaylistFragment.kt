@@ -127,7 +127,10 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.playlistCreated.observe(viewLifecycleOwner) { name ->
+        viewModel.playlistCreated.observe(viewLifecycleOwner) { (name, playlistId) ->
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                CREATED_PLAYLIST_ID_KEY, playlistId.toInt()
+            )
             Toast.makeText(
                 requireContext(),
                 getString(R.string.playlist_created, name),
@@ -140,5 +143,9 @@ class CreatePlaylistFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val CREATED_PLAYLIST_ID_KEY = "created_playlist_id"
     }
 }

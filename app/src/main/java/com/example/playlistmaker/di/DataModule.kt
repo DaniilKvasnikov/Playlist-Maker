@@ -6,6 +6,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.db.dao.FavoriteTrackDao
 import com.example.playlistmaker.playlist.data.db.PlaylistDao
+import com.example.playlistmaker.playlist.data.db.PlaylistTrackDao
 import com.example.playlistmaker.playlist.data.mapper.PlaylistDbConverter
 import com.example.playlistmaker.player.domain.api.MediaPlayerFactory
 import com.example.playlistmaker.player.data.factory.AndroidMediaPlayerFactory
@@ -37,6 +38,26 @@ private val MIGRATION_1_2 = object : Migration(1, 2) {
     }
 }
 
+private val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            """CREATE TABLE IF NOT EXISTS playlist_tracks (
+                trackId INTEGER PRIMARY KEY NOT NULL,
+                trackName TEXT NOT NULL,
+                artistName TEXT NOT NULL,
+                trackTimeMillis INTEGER NOT NULL,
+                artworkUrl100 TEXT NOT NULL,
+                collectionName TEXT,
+                releaseDate TEXT,
+                primaryGenreName TEXT NOT NULL,
+                country TEXT NOT NULL,
+                previewUrl TEXT NOT NULL,
+                addedTimestamp INTEGER NOT NULL
+            )"""
+        )
+    }
+}
+
 val dataModule = module {
     single<AppDatabase> {
         Room.databaseBuilder(
@@ -44,7 +65,7 @@ val dataModule = module {
             AppDatabase::class.java,
             "playlist_maker.db"
         )
-            .addMigrations(MIGRATION_1_2)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
             .build()
     }
 
@@ -54,6 +75,10 @@ val dataModule = module {
 
     single<PlaylistDao> {
         get<AppDatabase>().playlistDao()
+    }
+
+    single<PlaylistTrackDao> {
+        get<AppDatabase>().playlistTrackDao()
     }
 
     single { PlaylistDbConverter(get()) }

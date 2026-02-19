@@ -13,8 +13,8 @@ class CreatePlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
-    private val _playlistCreated = MutableLiveData<String>()
-    val playlistCreated: LiveData<String> = _playlistCreated
+    private val _playlistCreated = MutableLiveData<Pair<String, Long>>()
+    val playlistCreated: LiveData<Pair<String, Long>> = _playlistCreated
 
     private var coverUri: Uri? = null
     var name: String = ""
@@ -38,8 +38,8 @@ class CreatePlaylistViewModel(
                 trackIds = emptyList(),
                 trackCount = 0
             )
-            playlistInteractor.addPlaylist(playlist)
-            _playlistCreated.postValue(name)
+            val playlistId = playlistInteractor.addPlaylist(playlist)
+            _playlistCreated.postValue(Pair(name, playlistId))
         }
     }
 }

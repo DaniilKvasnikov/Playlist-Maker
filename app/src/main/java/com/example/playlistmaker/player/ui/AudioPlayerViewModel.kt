@@ -11,6 +11,8 @@ import com.example.playlistmaker.player.domain.api.PauseUseCase
 import com.example.playlistmaker.player.domain.api.PlayUseCase
 import com.example.playlistmaker.player.domain.api.PreparePlayerUseCase
 import com.example.playlistmaker.player.domain.api.ReleasePlayerUseCase
+import com.example.playlistmaker.playlist.domain.api.PlaylistInteractor
+import com.example.playlistmaker.playlist.domain.models.Playlist
 import com.example.playlistmaker.search.ui.mappers.toDomain
 import com.example.playlistmaker.search.ui.models.TrackUI
 import kotlinx.coroutines.Job
@@ -25,7 +27,8 @@ class AudioPlayerViewModel(
     private val releasePlayerUseCase: ReleasePlayerUseCase,
     private val getCurrentPositionUseCase: GetCurrentPositionUseCase,
     private val isPlayingUseCase: IsPlayingUseCase,
-    private val favoritesInteractor: FavoritesInteractor
+    private val favoritesInteractor: FavoritesInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     private val _state = MutableLiveData<AudioPlayerState>()
@@ -33,6 +36,12 @@ class AudioPlayerViewModel(
 
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> = _isFavorite
+
+    private val _playlists = MutableLiveData<List<Playlist>>()
+    val playlists: LiveData<List<Playlist>> = _playlists
+
+    private val _addToPlaylistResult = SingleLiveEvent<Pair<Boolean, String>>()
+    val addToPlaylistResult: LiveData<Pair<Boolean, String>> = _addToPlaylistResult
 
     private var currentTrack: TrackUI? = null
     private var updateJob: Job? = null
@@ -69,6 +78,35 @@ class AudioPlayerViewModel(
                 favoritesInteractor.addToFavorites(track.toDomain())
             }
             _isFavorite.postValue(!currentFavorite)
+        }
+    }
+
+    fun loadPlaylists() {
+        viewModelScope.launch {
+            val playlists = playlistInteractor.getAllPlaylists()
+            _playlists.postValue(playlists)
+        }
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist) {
+        val track = currentTrack ?: return
+
+        if (playlist.trackIds.contains(track.trackId)) {
+            _addToPlaylistResult.value = Pair(false, playlist.name)
+        } else {
+            viewModelScope.launch {
+                playlistInteractor.addTrackToPlaylist(track.toDomain(), playlist)
+                _addToPlaylistResult.postValue(Pair(true, playlist.name))
+            }
+        }
+    }
+
+    fun addTrackToPlaylistById(playlistId: Int) {
+        val track = currentTrack ?: return
+        viewModelScope.launch {
+            val playlist = playlistInteractor.getPlaylistById(playlistId) ?: return@launch
+            playlistInteractor.addTrackToPlaylist(track.toDomain(), playlist)
+            _addToPlaylistResult.postValue(Pair(true, playlist.name))
         }
     }
 

@@ -28,7 +28,8 @@ val presentationModule = module {
             releasePlayerUseCase = get(),
             getCurrentPositionUseCase = get(),
             isPlayingUseCase = get(),
-            favoritesInteractor = get()
+            favoritesInteractor = get(),
+            playlistInteractor = get()
         )
     }
 
