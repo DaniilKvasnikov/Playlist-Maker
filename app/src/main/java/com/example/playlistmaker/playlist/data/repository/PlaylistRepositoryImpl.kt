@@ -95,6 +95,18 @@ class PlaylistRepositoryImpl(
         cleanupOrphanedTrack(trackId)
     }
 
+    override suspend fun deletePlaylist(playlistId: Int) {
+        val playlist = getPlaylistById(playlistId) ?: return
+        val trackIds = playlist.trackIds
+
+        playlistTrackDao.deleteTracksByPlaylistId(playlistId)
+        playlistDao.deletePlaylistById(playlistId)
+
+        for (trackId in trackIds) {
+            cleanupOrphanedTrack(trackId)
+        }
+    }
+
     private suspend fun cleanupOrphanedTrack(trackId: Int) {
         val allPlaylists = getAllPlaylists()
         val trackInAnyPlaylist = allPlaylists.any { trackId in it.trackIds }

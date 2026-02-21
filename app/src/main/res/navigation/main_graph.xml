@@ -84,6 +84,22 @@
             app:exitAnim="@android:anim/slide_out_right"
             app:popEnterAnim="@android:anim/slide_in_left"
             app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_playlistDetails_to_editPlaylist"
+            app:destination="@id/editPlaylistFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editPlaylistFragment"
+        android:name="com.example.playlistmaker.playlist.ui.edit.EditPlaylistFragment"
+        android:label="EditPlaylistFragment">
+        <argument
+            android:name="playlist_id"
+            app:argType="integer" />
     </fragment>
 
 </navigation>

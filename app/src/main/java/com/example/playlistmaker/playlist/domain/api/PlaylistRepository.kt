@@ -12,5 +12,6 @@ interface PlaylistRepository {
     suspend fun addTrackToPlaylist(track: Track, playlist: Playlist)
     suspend fun getTracksByIds(trackIds: List<Int>): List<Track>
     suspend fun removeTrackFromPlaylist(trackId: Int, playlistId: Int)
+    suspend fun deletePlaylist(playlistId: Int)
     fun saveImageToStorage(uri: Uri): String
 }

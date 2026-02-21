@@ -18,12 +18,12 @@ import com.example.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CreatePlaylistFragment : Fragment() {
+open class CreatePlaylistFragment : Fragment() {
 
     private var _binding: FragmentCreatePlaylistBinding? = null
-    private val binding get() = _binding!!
+    protected val binding get() = _binding!!
 
-    private val viewModel by viewModel<CreatePlaylistViewModel>()
+    protected open val viewModel by viewModel<CreatePlaylistViewModel>()
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {

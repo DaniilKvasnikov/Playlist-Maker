@@ -15,7 +15,7 @@ data class CreatePlaylistState(
     val coverUri: Uri? = null
 )
 
-class CreatePlaylistViewModel(
+open class CreatePlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
