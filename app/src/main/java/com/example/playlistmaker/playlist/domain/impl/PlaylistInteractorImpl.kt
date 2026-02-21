@@ -30,6 +30,14 @@ class PlaylistInteractorImpl(
         playlistRepository.addTrackToPlaylist(track, playlist)
     }
 
+    override suspend fun getTracksByIds(trackIds: List<Int>): List<Track> {
+        return playlistRepository.getTracksByIds(trackIds)
+    }
+
+    override suspend fun removeTrackFromPlaylist(trackId: Int, playlistId: Int) {
+        playlistRepository.removeTrackFromPlaylist(trackId, playlistId)
+    }
+
     override fun saveImageToStorage(uri: Uri): String {
         return playlistRepository.saveImageToStorage(uri)
     }

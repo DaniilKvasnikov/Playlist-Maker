@@ -10,5 +10,7 @@ interface PlaylistRepository {
     suspend fun getAllPlaylists(): List<Playlist>
     suspend fun getPlaylistById(id: Int): Playlist?
     suspend fun addTrackToPlaylist(track: Track, playlist: Playlist)
+    suspend fun getTracksByIds(trackIds: List<Int>): List<Track>
+    suspend fun removeTrackFromPlaylist(trackId: Int, playlistId: Int)
     fun saveImageToStorage(uri: Uri): String
 }

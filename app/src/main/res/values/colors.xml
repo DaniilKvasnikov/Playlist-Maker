@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="background">#FFFFFF</color>
+    <color name="background_playlist">#E6E8EB</color>
     <color name="icon_color">#1A1B22</color>
     <color name="text_color_header">#FFFFFFFF</color>
     <color name="text_color">#1A1B22</color>
@@ -18,12 +19,16 @@
     <color name="text_color_search">#AEAFB4</color>
     <color name="item_track_info">#AEAFB4</color>
     <color name="item_track_info_play">#AEAFB4</color>
-    <color name="item_track_header">#000000</color>
+    <color name="item_track_header">#1A1B22</color>
+    <color name="item_track_header_fix">#1A1B22</color>
     <color name="search_not_found_text_color">#1A1B22</color>
     <color name="not_found_icon">#1A1B22</color>
     <color name="not_found_text_refresh">#FFFFFF</color>
     <color name="button_background_transparent">#401A1B22</color>
     <color name="media_library_menu_text">#1A1B22</color>
     <color name="color_rounded_rectangle_full">#E6E8EB</color>
+    <color name="color_more_vert">#1A1B22</color>
+    <color name="color_bottom_sheet_handle">#E6E8EB</color>
+    <color name="color_rounded_rectangle_bottom_sheet">#FFFFFF</color>
 
 </resources>

@@ -49,4 +49,16 @@
         <item quantity="many">%d треков</item>
         <item quantity="other">%d треков</item>
     </plurals>
+
+    <plurals name="minutes_count">
+        <item quantity="one">%d минута</item>
+        <item quantity="few">%d минуты</item>
+        <item quantity="many">%d минут</item>
+        <item quantity="other">%d минут</item>
+    </plurals>
+
+    <string name="playlist_no_tracks">В этом плейлисте пока нет треков</string>
+    <string name="delete_track_dialog_message">Хотите удалить трек?</string>
+    <string name="yes">ДА</string>
+    <string name="no">НЕТ</string>
 </resources>
