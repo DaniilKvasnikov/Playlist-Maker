@@ -201,10 +201,10 @@ class PlaylistDetailsFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext(), R.style.AlertTheme)
             .setTitle(R.string.delete_playlist_title)
             .setMessage(R.string.delete_playlist_message)
-            .setNegativeButton(R.string.no) { dialog, _ ->
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
             }
-            .setPositiveButton(R.string.yes) { _, _ ->
+            .setPositiveButton(R.string.delete) { _, _ ->
                 viewModel.deletePlaylist()
             }
             .show()

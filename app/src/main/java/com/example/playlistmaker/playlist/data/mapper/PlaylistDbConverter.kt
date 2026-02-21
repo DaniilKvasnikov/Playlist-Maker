@@ -23,7 +23,7 @@ class PlaylistDbConverter {
             name = entity.name,
             description = entity.description,
             imagePath = entity.imagePath,
-            trackIds = playlistWithTracks.tracks.map { it.trackId },
+            trackIds = playlistWithTracks.tracks.sortedByDescending { it.addedTimestamp }.map { it.trackId },
             trackCount = entity.trackCount
         )
     }

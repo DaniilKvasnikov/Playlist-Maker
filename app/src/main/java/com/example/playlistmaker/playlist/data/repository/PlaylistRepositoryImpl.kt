@@ -64,23 +64,21 @@ class PlaylistRepositoryImpl(
 
     override suspend fun getTracksByIds(trackIds: List<Int>): List<Track> {
         val allTracks = playlistTrackDao.getAllTracks()
-        return allTracks
-            .filter { it.trackId in trackIds }
-            .map { entity ->
-                Track(
-                    trackId = entity.trackId,
-                    trackName = entity.trackName,
-                    artistName = entity.artistName,
-                    trackTimeMillis = entity.trackTimeMillis,
-                    artworkUrl100 = entity.artworkUrl100,
-                    collectionName = entity.collectionName,
-                    releaseDate = entity.releaseDate,
-                    primaryGenreName = entity.primaryGenreName,
-                    country = entity.country,
-                    previewUrl = entity.previewUrl
-                )
-            }
-            .distinctBy { it.trackId }
+        val trackMap = allTracks.associateBy { it.trackId }
+        return trackIds.mapNotNull { trackMap[it] }.map { entity ->
+            Track(
+                trackId = entity.trackId,
+                trackName = entity.trackName,
+                artistName = entity.artistName,
+                trackTimeMillis = entity.trackTimeMillis,
+                artworkUrl100 = entity.artworkUrl100,
+                collectionName = entity.collectionName,
+                releaseDate = entity.releaseDate,
+                primaryGenreName = entity.primaryGenreName,
+                country = entity.country,
+                previewUrl = entity.previewUrl
+            )
+        }
     }
 
     override suspend fun removeTrackFromPlaylist(trackId: Int, playlistId: Int) {
