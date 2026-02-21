@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="background">#1A1B22</color>
     <color name="background_settings">#1A1B22</color>
     <color name="DarkThemeSwitchColor">#3772E7</color>
@@ -7,8 +7,9 @@
     <color name="text_color_header_settings">#FFFFFF</color>
     <color name="button_back_settings">#FFFFFF</color>
     <color name="icon_color_settings">#FFF</color>
-    <color name="icon_color_search">#1A1B22</color>
     <color name="text_color_search">#1A1B22</color>
+    <color name="DarkThemeSwitchColor2">#FFFFFF</color>
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#FFFFFF</color>
     <color name="item_track_info">#FFFFFF</color>
     <color name="item_track_header">#FFFFFF</color>
     <color name="search_not_found_text_color">#FFFFFF</color>
@@ -16,4 +17,5 @@
     <color name="not_found_text_refresh">#1A1B22</color>
     <color name="button_background_transparent">#40FFFFFF</color>
     <color name="media_library_menu_text">#BDBDBD</color>
+    <color name="color_rounded_rectangle_full">#FFFFFF</color>
 </resources>

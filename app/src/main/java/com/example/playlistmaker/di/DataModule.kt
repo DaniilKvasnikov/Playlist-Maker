@@ -3,6 +3,9 @@ package com.example.playlistmaker.di
 import androidx.room.Room
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.db.dao.FavoriteTrackDao
+import com.example.playlistmaker.playlist.data.db.PlaylistDao
+import com.example.playlistmaker.playlist.data.db.PlaylistTrackDao
+import com.example.playlistmaker.playlist.data.mapper.PlaylistDbConverter
 import com.example.playlistmaker.player.domain.api.MediaPlayerFactory
 import com.example.playlistmaker.player.data.factory.AndroidMediaPlayerFactory
 import com.example.playlistmaker.search.data.local.SearchHistoryStorage
@@ -24,12 +27,25 @@ val dataModule = module {
             androidContext(),
             AppDatabase::class.java,
             "playlist_maker.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     single<FavoriteTrackDao> {
         get<AppDatabase>().favoriteTrackDao()
     }
+
+    single<PlaylistDao> {
+        get<AppDatabase>().playlistDao()
+    }
+
+    single<PlaylistTrackDao> {
+        get<AppDatabase>().playlistTrackDao()
+    }
+
+    single { PlaylistDbConverter() }
+
     // JSON serialization
     single<Gson> {
         GsonBuilder()
