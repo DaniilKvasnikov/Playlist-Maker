@@ -85,7 +85,9 @@ class PlaylistDetailsFragment : Fragment() {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.overlay.alpha = (slideOffset + 1f) / 2f
+                binding.overlay.alpha = slideOffset
+                binding.overlay.visibility = if (slideOffset > 0f) View.VISIBLE else View.GONE
+                println(slideOffset)
             }
         })
 
@@ -198,13 +200,13 @@ class PlaylistDetailsFragment : Fragment() {
     }
 
     private fun showDeletePlaylistDialog() {
+        val playlistName = viewModel.getCurrentPlaylist()?.name ?: return
         MaterialAlertDialogBuilder(requireContext(), R.style.AlertTheme)
-            .setTitle(R.string.delete_playlist_title)
-            .setMessage(R.string.delete_playlist_message)
-            .setNegativeButton(R.string.cancel) { dialog, _ ->
+            .setMessage("Хотите удалить плейлист «$playlistName»?")
+            .setNegativeButton(R.string.no) { dialog, _ ->
                 dialog.dismiss()
             }
-            .setPositiveButton(R.string.delete) { _, _ ->
+            .setPositiveButton(R.string.yes) { _, _ ->
                 viewModel.deletePlaylist()
             }
             .show()
