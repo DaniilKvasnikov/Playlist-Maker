@@ -38,7 +38,8 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.audioPlayerFragment,
                 R.id.createPlaylistFragment,
-                R.id.playlistDetailsFragment -> {
+                R.id.playlistDetailsFragment,
+                R.id.editPlaylistFragment -> {
                     binding.bottomNavigation.visibility = View.GONE
                 }
                 else -> {
