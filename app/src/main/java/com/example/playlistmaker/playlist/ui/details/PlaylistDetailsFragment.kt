@@ -74,20 +74,11 @@ class PlaylistDetailsFragment : Fragment() {
 
         menuBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        binding.overlay.visibility = View.GONE
-                    }
-                    else -> {
-                        binding.overlay.visibility = View.VISIBLE
-                    }
-                }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 binding.overlay.alpha = slideOffset
                 binding.overlay.visibility = if (slideOffset > 0f) View.VISIBLE else View.GONE
-                println(slideOffset)
             }
         })
 
