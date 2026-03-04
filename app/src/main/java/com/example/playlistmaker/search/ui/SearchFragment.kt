@@ -81,12 +81,13 @@ class SearchFragment : Fragment() {
         binding.recycler.adapter = adapter
 
         binding.historyRecycler.layoutManager = LinearLayoutManager(requireContext())
-        historyAdapter = TrackAdapter(historyData) { track ->
+        historyAdapter = TrackAdapter(historyData,
+            onTrackClick = { track ->
             if (isClickAllowed()) {
                 viewModel.saveToHistory(track)
                 openAudioPlayer(track)
             }
-        }
+        })
         binding.historyRecycler.adapter = historyAdapter
     }
 
