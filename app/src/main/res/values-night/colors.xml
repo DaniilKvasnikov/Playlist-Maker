@@ -18,4 +18,6 @@
     <color name="button_background_transparent">#40FFFFFF</color>
     <color name="media_library_menu_text">#BDBDBD</color>
     <color name="color_rounded_rectangle_full">#FFFFFF</color>
+    <color name="color_bottom_sheet_handle">#FFFFFF</color>
+    <color name="color_rounded_rectangle_bottom_sheet">#1A1B22</color>
 </resources>

@@ -62,6 +62,57 @@ class PlaylistRepositoryImpl(
         playlistDao.updatePlaylist(playlistDbConverter.map(updatedPlaylist))
     }
 
+    override suspend fun getTracksByIds(trackIds: List<Int>): List<Track> {
+        val allTracks = playlistTrackDao.getAllTracks()
+        val trackMap = allTracks.associateBy { it.trackId }
+        return trackIds.mapNotNull { trackMap[it] }.map { entity ->
+            Track(
+                trackId = entity.trackId,
+                trackName = entity.trackName,
+                artistName = entity.artistName,
+                trackTimeMillis = entity.trackTimeMillis,
+                artworkUrl100 = entity.artworkUrl100,
+                collectionName = entity.collectionName,
+                releaseDate = entity.releaseDate,
+                primaryGenreName = entity.primaryGenreName,
+                country = entity.country,
+                previewUrl = entity.previewUrl
+            )
+        }
+    }
+
+    override suspend fun removeTrackFromPlaylist(trackId: Int, playlistId: Int) {
+        playlistTrackDao.deleteTrack(playlistId, trackId)
+
+        val playlist = getPlaylistById(playlistId) ?: return
+        val updatedPlaylist = playlist.copy(
+            trackCount = maxOf(playlist.trackCount - 1, 0)
+        )
+        playlistDao.updatePlaylist(playlistDbConverter.map(updatedPlaylist))
+
+        cleanupOrphanedTrack(trackId)
+    }
+
+    override suspend fun deletePlaylist(playlistId: Int) {
+        val playlist = getPlaylistById(playlistId) ?: return
+        val trackIds = playlist.trackIds
+
+        playlistTrackDao.deleteTracksByPlaylistId(playlistId)
+        playlistDao.deletePlaylistById(playlistId)
+
+        for (trackId in trackIds) {
+            cleanupOrphanedTrack(trackId)
+        }
+    }
+
+    private suspend fun cleanupOrphanedTrack(trackId: Int) {
+        val allPlaylists = getAllPlaylists()
+        val trackInAnyPlaylist = allPlaylists.any { trackId in it.trackIds }
+        if (!trackInAnyPlaylist) {
+            playlistTrackDao.deleteTrackById(trackId)
+        }
+    }
+
     override fun saveImageToStorage(uri: Uri): String {
         val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlist_covers")
         if (!filePath.exists()) {
