@@ -155,31 +155,22 @@ class AudioPlayerFragment : Fragment() {
     private fun render(state: AudioPlayerState) {
         when (state) {
             is AudioPlayerState.Prepared -> {
-                updatePlayButton(isPlaying = false)
+                binding.playButton.setIsPlaying(false)
                 binding.playTime.text = getString(R.string.default_playTime)
             }
             is AudioPlayerState.Playing -> {
-                updatePlayButton(isPlaying = true)
+                binding.playButton.setIsPlaying(true)
                 binding.playTime.text = timeFormat.format(state.position.toLong())
             }
             is AudioPlayerState.Paused -> {
-                updatePlayButton(isPlaying = false)
+                binding.playButton.setIsPlaying(false)
                 binding.playTime.text = timeFormat.format(state.position.toLong())
             }
             is AudioPlayerState.Completed -> {
-                updatePlayButton(isPlaying = false)
+                binding.playButton.setIsPlaying(false)
                 binding.playTime.text = getString(R.string.default_playTime)
             }
         }
-    }
-
-    private fun updatePlayButton(isPlaying: Boolean) {
-        val iconRes = if (isPlaying) {
-            R.drawable.ic_pause_button_84
-        } else {
-            R.drawable.ic_play_button_100
-        }
-        binding.playButton.setImageResource(iconRes)
     }
 
     private fun displayTrackInfo(track: TrackUI) {
