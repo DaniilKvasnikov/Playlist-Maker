@@ -139,9 +139,7 @@ class AudioPlayerFragment : Fragment() {
         }
 
         val intent = Intent(requireContext(), AudioPlayerService::class.java).apply {
-            putExtra(AudioPlayerService.EXTRA_PREVIEW_URL, track.previewUrl)
-            putExtra(AudioPlayerService.EXTRA_ARTIST_NAME, track.artistName)
-            putExtra(AudioPlayerService.EXTRA_TRACK_NAME, track.trackName)
+            putExtra(AudioPlayerService.EXTRA_TRACK, track)
         }
         isServiceBound = requireContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
 
@@ -165,12 +163,16 @@ class AudioPlayerFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
         if (isServiceBound) {
             requireContext().unbindService(serviceConnection)
             isServiceBound = false
         }
-        _binding = null
-        super.onDestroyView()
+        super.onDestroy()
     }
 
     private fun setupBottomSheet() {

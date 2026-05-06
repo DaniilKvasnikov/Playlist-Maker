@@ -13,6 +13,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import com.example.playlistmaker.R
 import com.example.playlistmaker.player.domain.api.PlayerRepository
+import com.example.playlistmaker.search.ui.models.TrackUI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,9 +34,7 @@ class AudioPlayerService : Service(), AudioPlayerController {
     private val _playerState = MutableStateFlow<PlayerServiceState>(PlayerServiceState.Idle)
     private var positionJob: Job? = null
 
-    private var previewUrl: String = ""
-    private var artistName: String = ""
-    private var trackName: String = ""
+    private var track: TrackUI? = null
 
     private val binder = AudioPlayerBinder()
 
@@ -50,11 +49,14 @@ class AudioPlayerService : Service(), AudioPlayerController {
 
     override fun onBind(intent: Intent?): IBinder {
         _playerState.value = PlayerServiceState.Idle
-        previewUrl = intent?.getStringExtra(EXTRA_PREVIEW_URL) ?: ""
-        artistName = intent?.getStringExtra(EXTRA_ARTIST_NAME) ?: ""
-        trackName = intent?.getStringExtra(EXTRA_TRACK_NAME) ?: ""
+        track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent?.getParcelableExtra(EXTRA_TRACK, TrackUI::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent?.getParcelableExtra(EXTRA_TRACK)
+        }
         playerRepository.preparePlayer(
-            url = previewUrl,
+            url = track?.previewUrl ?: "",
             onPrepared = { _playerState.value = PlayerServiceState.Prepared },
             onCompletion = {
                 serviceScope.launch {
@@ -92,7 +94,7 @@ class AudioPlayerService : Service(), AudioPlayerController {
     override fun showNotification() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.app_name))
-            .setContentText("$artistName - $trackName")
+            .setContentText("${track?.artistName} - ${track?.trackName}")
             .setSmallIcon(R.drawable.ic_placeholder_45)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
@@ -147,9 +149,7 @@ class AudioPlayerService : Service(), AudioPlayerController {
     }
 
     companion object {
-        const val EXTRA_PREVIEW_URL = "extra_preview_url"
-        const val EXTRA_ARTIST_NAME = "extra_artist_name"
-        const val EXTRA_TRACK_NAME = "extra_track_name"
+        const val EXTRA_TRACK = "extra_track"
         private const val CHANNEL_ID = "audio_player_channel"
         private const val NOTIFICATION_ID = 1
         private const val POSITION_UPDATE_INTERVAL = 300L
