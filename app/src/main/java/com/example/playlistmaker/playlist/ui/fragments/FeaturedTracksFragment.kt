@@ -45,9 +45,9 @@ class FeaturedTracksFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = TrackAdapter { track ->
+        adapter = TrackAdapter(onTrackClick = { track ->
             navigateToPlayer(track)
-        }
+        })
         binding.rvFavorites.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFavorites.adapter = adapter
     }

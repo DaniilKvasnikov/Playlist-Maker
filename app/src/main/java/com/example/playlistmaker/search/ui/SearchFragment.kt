@@ -72,12 +72,12 @@ class SearchFragment : Fragment() {
 
     private fun setupRecyclerViews() {
         binding.recycler.layoutManager = LinearLayoutManager(requireContext())
-        val adapter = TrackAdapter(data) { track ->
+        val adapter = TrackAdapter(data, onTrackClick = { track ->
             if (isClickAllowed()) {
                 viewModel.saveToHistory(track)
                 openAudioPlayer(track)
             }
-        }
+        })
         binding.recycler.adapter = adapter
 
         binding.historyRecycler.layoutManager = LinearLayoutManager(requireContext())

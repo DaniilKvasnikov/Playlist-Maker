@@ -24,12 +24,6 @@ val presentationModule = module {
 
     viewModel {
         AudioPlayerViewModel(
-            preparePlayerUseCase = get(),
-            playUseCase = get(),
-            pauseUseCase = get(),
-            releasePlayerUseCase = get(),
-            getCurrentPositionUseCase = get(),
-            isPlayingUseCase = get(),
             favoritesInteractor = get(),
             playlistInteractor = get()
         )
@@ -48,7 +42,7 @@ val presentationModule = module {
 
     viewModel {
         MediaLibraryViewModel()
-    }
+        }
 
     viewModel {
         FavoritesViewModel(favoritesInteractor = get())
