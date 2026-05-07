@@ -3,6 +3,8 @@ import org.gradle.kotlin.dsl.implementation
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
     alias(libs.plugins.navigation.safe.args)
@@ -24,6 +26,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        compose = true
     }
 
     buildTypes {
@@ -45,6 +48,20 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling.preview)
+    debugImplementation(libs.compose.ui.tooling)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.runtime.livedata)
+    implementation(libs.navigation.compose)
+    implementation(libs.koin.compose)
+    implementation(libs.glide.compose)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.activity.compose)
+
     implementation(libs.koin.android)
     implementation(libs.material)
     implementation(libs.glide)
