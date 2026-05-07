@@ -84,7 +84,11 @@ fun PlaylistsScreen(
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(playlists) { playlist ->
+                    items(
+                        items = playlists,
+                        key = { playlist -> playlist.id },
+                        contentType = { "playlist" }
+                    ) { playlist ->
                         PlaylistGridItem(playlist = playlist, onClick = onPlaylistClick)
                     }
                 }

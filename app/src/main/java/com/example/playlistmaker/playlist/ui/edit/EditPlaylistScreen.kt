@@ -23,6 +23,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.res.stringResource
+import com.example.playlistmaker.R
 import com.example.playlistmaker.playlist.ui.create.CreatePlaylistState
 import com.example.playlistmaker.playlist.ui.create.PlaylistFormContent
 import org.koin.androidx.compose.koinViewModel
@@ -57,7 +59,7 @@ fun EditPlaylistScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Редактировать") },
+                title = { Text(stringResource(R.string.edit_playlist)) },
                 navigationIcon = {
                     IconButton(onClick = { handleBack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
@@ -68,7 +70,7 @@ fun EditPlaylistScreen(
     ) { padding ->
         PlaylistFormContent(
             state = state,
-            buttonLabel = "Сохранить",
+            buttonLabel = stringResource(R.string.save),
             onCoverClick = {
                 pickMedia.launch(
                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -83,16 +85,16 @@ fun EditPlaylistScreen(
         if (showExitDialog) {
             AlertDialog(
                 onDismissRequest = { showExitDialog = false },
-                title = { Text("Завершить редактирование?") },
-                text = { Text("Все несохранённые данные будут потеряны") },
+                title = { Text(stringResource(R.string.finish_creating_playlist_title)) },
+                text = { Text(stringResource(R.string.finish_creating_playlist_message)) },
                 confirmButton = {
                     TextButton(onClick = { showExitDialog = false; onBack() }) {
-                        Text("Завершить")
+                        Text(stringResource(R.string.finish))
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showExitDialog = false }) {
-                        Text("Отмена")
+                        Text(stringResource(R.string.cancel))
                     }
                 }
             )

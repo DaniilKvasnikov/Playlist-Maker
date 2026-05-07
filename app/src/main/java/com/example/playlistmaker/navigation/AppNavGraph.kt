@@ -31,7 +31,6 @@ import com.example.playlistmaker.playlist.ui.details.PlaylistDetailsScreen
 import com.example.playlistmaker.playlist.ui.edit.EditPlaylistScreen
 import com.example.playlistmaker.search.ui.SearchScreen
 import com.example.playlistmaker.settings.ui.SettingsScreen
-import com.example.playlistmaker.settings.ui.SettingsState
 import com.example.playlistmaker.settings.ui.SettingsViewModel
 import com.example.playlistmaker.ui.theme.AppTheme
 import com.google.gson.Gson
@@ -40,9 +39,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun AppNavGraph() {
     val settingsViewModel = koinViewModel<SettingsViewModel>()
-    val settingsState by settingsViewModel.state.observeAsState()
-    val isDarkTheme = (settingsState as? SettingsState.Loaded)?.settings?.isDarkTheme
-        ?: isSystemInDarkTheme()
+    val isDarkTheme by settingsViewModel.isDarkTheme.observeAsState()
+    val actualDarkTheme = isDarkTheme ?: isSystemInDarkTheme()
 
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -55,15 +53,15 @@ fun AppNavGraph() {
         !dest.hasRoute<EditPlaylistRoute>()
     } ?: true
 
-    AppTheme(darkTheme = isDarkTheme) {
+    AppTheme(darkTheme = actualDarkTheme) {
         Scaffold(
             contentWindowInsets = WindowInsets(0),
             bottomBar = {
                 if (showBottomBar) {
                     NavigationBar {
                         val navItemColors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color(0xFF3772E7),
-                            selectedTextColor = Color(0xFF3772E7),
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
                             unselectedIconColor = MaterialTheme.colorScheme.onSurface,
                             unselectedTextColor = MaterialTheme.colorScheme.onSurface,
                             indicatorColor = Color.Transparent

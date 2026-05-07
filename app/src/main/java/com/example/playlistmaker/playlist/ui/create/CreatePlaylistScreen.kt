@@ -40,10 +40,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Box
@@ -99,7 +99,7 @@ fun PlaylistFormContent(
         OutlinedTextField(
             value = state.name,
             onValueChange = onNameChange,
-            label = { Text("Название") },
+            label = { Text(stringResource(R.string.playlist_name_hint)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -109,7 +109,7 @@ fun PlaylistFormContent(
         OutlinedTextField(
             value = state.description,
             onValueChange = onDescriptionChange,
-            label = { Text("Описание") },
+            label = { Text(stringResource(R.string.playlist_description_hint)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -129,11 +129,11 @@ fun PlaylistFormContent(
                 .padding(bottom = 32.dp),
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF3772E7),
-                disabledContainerColor = Color(0xFFAEAFB4)
+                containerColor = MaterialTheme.colorScheme.primary,
+                disabledContainerColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         ) {
-            Text(buttonLabel, fontSize = 16.sp, color = Color.White)
+            Text(buttonLabel, fontSize = 16.sp, color = MaterialTheme.colorScheme.onPrimary)
         }
     }
 }
@@ -162,7 +162,7 @@ fun CreatePlaylistScreen(
 
     LaunchedEffect(playlistCreated) {
         playlistCreated?.let { (name, id) ->
-            Toast.makeText(context, "Плейлист $name создан", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.playlist_created, name), Toast.LENGTH_SHORT).show()
             onCreated(id.toInt())
         }
     }
@@ -170,7 +170,7 @@ fun CreatePlaylistScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Новый плейлист") },
+                title = { Text(stringResource(R.string.new_playlist)) },
                 navigationIcon = {
                     IconButton(onClick = { handleBack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
@@ -181,7 +181,7 @@ fun CreatePlaylistScreen(
     ) { padding ->
         PlaylistFormContent(
             state = state,
-            buttonLabel = "Создать",
+            buttonLabel = stringResource(R.string.create_playlist),
             onCoverClick = {
                 pickMedia.launch(
                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -196,16 +196,16 @@ fun CreatePlaylistScreen(
         if (showExitDialog) {
             AlertDialog(
                 onDismissRequest = { showExitDialog = false },
-                title = { Text("Завершить создание плейлиста?") },
-                text = { Text("Все несохранённые данные будут потеряны") },
+                title = { Text(stringResource(R.string.finish_creating_playlist_title)) },
+                text = { Text(stringResource(R.string.finish_creating_playlist_message)) },
                 confirmButton = {
                     TextButton(onClick = { showExitDialog = false; onBack() }) {
-                        Text("Завершить")
+                        Text(stringResource(R.string.finish))
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showExitDialog = false }) {
-                        Text("Отмена")
+                        Text(stringResource(R.string.cancel))
                     }
                 }
             )

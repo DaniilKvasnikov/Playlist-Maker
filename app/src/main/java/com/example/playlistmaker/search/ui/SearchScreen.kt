@@ -48,6 +48,8 @@ import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.runtime.livedata.observeAsState
 
+private const val SEARCH_DEBOUNCE_DELAY_MS = 500L
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
@@ -58,7 +60,7 @@ fun SearchScreen(
     val state by viewModel.state.observeAsState(SearchState.None)
 
     LaunchedEffect(query) {
-        delay(500L)
+        delay(SEARCH_DEBOUNCE_DELAY_MS)
         if (query.isNotBlank()) viewModel.searchTracks(query) else viewModel.loadHistory()
     }
 

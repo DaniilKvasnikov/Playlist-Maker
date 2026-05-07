@@ -18,20 +18,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.example.playlistmaker.playlist.domain.models.Playlist
 import com.example.playlistmaker.playlist.ui.fragments.FavoritesScreen
 import com.example.playlistmaker.playlist.ui.fragments.PlaylistsScreen
 import com.example.playlistmaker.search.ui.models.TrackUI
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MediaLibraryScreen(
+    viewModel: MediaLibraryViewModel = koinViewModel(),
     onTrackClick: (TrackUI) -> Unit,
     onPlaylistClick: (Playlist) -> Unit,
     onCreatePlaylistClick: () -> Unit
 ) {
-    val tabs = listOf("Избранные треки", "Плейлисты")
+    val tabs = viewModel.tabTitleRes.map { stringResource(it) }
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val scope = rememberCoroutineScope()
 
