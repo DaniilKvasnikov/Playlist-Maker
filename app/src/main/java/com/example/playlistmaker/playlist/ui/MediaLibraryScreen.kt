@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.example.playlistmaker.R
 import com.example.playlistmaker.playlist.domain.models.Playlist
 import com.example.playlistmaker.playlist.ui.fragments.FavoritesScreen
 import com.example.playlistmaker.playlist.ui.fragments.PlaylistsScreen
@@ -40,7 +41,7 @@ fun MediaLibraryScreen(
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(title = { Text("Медиатека") })
+            TopAppBar(title = { Text(stringResource(R.string.media_library)) })
         }
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {

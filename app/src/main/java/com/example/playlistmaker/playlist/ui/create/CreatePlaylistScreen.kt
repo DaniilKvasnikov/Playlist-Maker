@@ -5,8 +5,8 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,6 +40,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -48,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.Alignment
+
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.playlistmaker.R
@@ -75,7 +80,18 @@ fun PlaylistFormContent(
                 .size(312.dp)
                 .align(CenterHorizontally)
                 .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .drawBehind {
+                    val strokeWidth = 1.dp.toPx()
+                    val dashWidth = 30.dp.toPx()
+                    val dashGap = 30.dp.toPx()
+                    val cornerRadius = 8.dp.toPx()
+                    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashWidth, dashGap), 0f)
+                    drawRoundRect(
+                        color = Color(0xFFAEAFB4),
+                        style = Stroke(width = strokeWidth, pathEffect = pathEffect),
+                        cornerRadius = CornerRadius(cornerRadius)
+                    )
+                }
                 .clickable { onCoverClick() },
             contentAlignment = Alignment.Center
         ) {
@@ -88,7 +104,7 @@ fun PlaylistFormContent(
                 )
             } else {
                 Icon(
-                    painter = painterResource(R.drawable.ic_placeholder_45),
+                    painter = painterResource(R.drawable.bg_cover_placeholder_100),
                     contentDescription = null,
                     modifier = Modifier.size(100.dp),
                     tint = Color.Unspecified

@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,22 +24,20 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.ui.models.TrackUI
 import com.example.playlistmaker.ui.components.TrackItem
@@ -56,7 +53,7 @@ fun SearchScreen(
     viewModel: SearchViewModel = koinViewModel(),
     onTrackClick: (TrackUI) -> Unit
 ) {
-    var query by remember { mutableStateOf("") }
+    val query by viewModel.query.observeAsState("")
     val state by viewModel.state.observeAsState(SearchState.None)
 
     LaunchedEffect(query) {
@@ -66,9 +63,7 @@ fun SearchScreen(
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("Поиск") }
-            )
+            TopAppBar(title = { Text(stringResource(R.string.text_search)) })
         }
     ) { padding ->
         Column(
@@ -78,9 +73,9 @@ fun SearchScreen(
         ) {
             SearchField(
                 query = query,
-                onQueryChange = { query = it },
+                onQueryChange = { viewModel.setQuery(it) },
                 onClear = {
-                    query = ""
+                    viewModel.setQuery("")
                     viewModel.loadHistory()
                 }
             )
@@ -122,7 +117,7 @@ private fun SearchField(
             .height(42.dp)
             .background(
                 color = Color(0xFFE6E8EB),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(12.dp)
             )
             .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -146,7 +141,7 @@ private fun SearchField(
             decorationBox = { inner ->
                 if (query.isEmpty()) {
                     Text(
-                        text = "Поиск",
+                        text = stringResource(R.string.text_search_edittext),
                         fontSize = 16.sp,
                         color = Color(0xFFAEAFB4)
                     )
@@ -163,7 +158,7 @@ private fun SearchField(
                 Icon(
                     painter = painterResource(R.drawable.ic_clear_24),
                     contentDescription = null,
-                    tint = Color.Unspecified
+                    tint = Color(0xFFAEAFB4)
                 )
             }
         }
@@ -210,7 +205,7 @@ private fun EmptyContent() {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Ничего не нашлось",
+                text = stringResource(R.string.search_not_found),
                 fontSize = 19.sp
             )
         }
@@ -233,15 +228,20 @@ private fun ErrorContent(onRetry: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Проблемы со связью",
-                fontSize = 19.sp
+                text = stringResource(R.string.problems_with_connection),
+                fontSize = 19.sp,
+                textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = onRetry,
-                shape = RoundedCornerShape(50)
+                shape = RoundedCornerShape(54.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.onSurface,
+                    contentColor = MaterialTheme.colorScheme.surface
+                )
             ) {
-                Text(text = "Обновить")
+                Text(text = stringResource(R.string.refresh_search))
             }
         }
     }
@@ -255,7 +255,7 @@ private fun HistoryContent(
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
-            text = "Вы искали",
+            text = stringResource(R.string.search_history_title),
             fontSize = 19.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -275,9 +275,13 @@ private fun HistoryContent(
         ) {
             Button(
                 onClick = onClearHistory,
-                shape = RoundedCornerShape(50)
+                shape = RoundedCornerShape(54.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.onSurface,
+                    contentColor = MaterialTheme.colorScheme.surface
+                )
             ) {
-                Text(text = "Очистить историю")
+                Text(text = stringResource(R.string.clear_history))
             }
         }
     }
