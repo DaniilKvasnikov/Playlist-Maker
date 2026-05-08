@@ -2,9 +2,11 @@ package com.example.playlistmaker.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -65,40 +67,56 @@ fun TrackItem(
         Spacer(modifier = Modifier.width(8.dp))
 
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .height(45.dp)
         ) {
-            Text(
-                text = track.trackName,
-                fontSize = 16.sp,
-                color = titleColor,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.BottomStart
             ) {
                 Text(
-                    text = track.artistName,
-                    fontSize = 11.sp,
-                    color = subtitleColor,
+                    text = track.trackName,
+                    fontSize = 16.sp,
+                    color = titleColor,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f, fill = false)
+                    overflow = TextOverflow.Ellipsis
                 )
-                Icon(
-                    painter = painterResource(R.drawable.ic_item_track_point_13),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(horizontal = 4.dp)
-                        .size(13.dp),
-                    tint = subtitleColor
-                )
-                Text(
-                    text = track.getFormattedTime(),
-                    fontSize = 11.sp,
-                    color = subtitleColor,
-                    maxLines = 1
-                )
+            }
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.TopStart
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = track.artistName,
+                        fontSize = 11.sp,
+                        color = subtitleColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
+                    )
+                    Icon(
+                        painter = painterResource(R.drawable.ic_item_track_point_13),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(horizontal = 4.dp)
+                            .size(13.dp),
+                        tint = subtitleColor
+                    )
+                    Text(
+                        text = track.getFormattedTime(),
+                        fontSize = 11.sp,
+                        color = subtitleColor,
+                        maxLines = 1
+                    )
+                }
             }
         }
 
