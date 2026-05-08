@@ -3,6 +3,7 @@ package com.example.playlistmaker.settings.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import com.example.playlistmaker.settings.domain.api.ApplyThemeUseCase
 import com.example.playlistmaker.settings.domain.api.GetThemeSettingsUseCase
 import com.example.playlistmaker.settings.domain.api.SaveThemeSettingsUseCase
@@ -22,6 +23,9 @@ class SettingsViewModel(
 
     private val _state = MutableLiveData<SettingsState>()
     val state: LiveData<SettingsState> = _state
+    val isDarkTheme: LiveData<Boolean?> = _state.map { state ->
+        (state as? SettingsState.Loaded)?.settings?.isDarkTheme
+    }
 
     init {
         loadSettings()

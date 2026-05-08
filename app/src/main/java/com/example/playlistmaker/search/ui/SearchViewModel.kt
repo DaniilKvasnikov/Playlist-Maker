@@ -23,6 +23,13 @@ class SearchViewModel(
     private val _state = MutableLiveData<SearchState>(SearchState.None)
     val state: LiveData<SearchState> = _state
 
+    private val _query = MutableLiveData("")
+    val query: LiveData<String> = _query
+
+    fun setQuery(value: String) {
+        _query.value = value
+    }
+
     fun searchTracks(query: String) {
         _state.value = SearchState.Loading
 

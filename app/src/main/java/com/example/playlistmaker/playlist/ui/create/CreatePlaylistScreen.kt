@@ -1,0 +1,248 @@
+package com.example.playlistmaker.playlist.ui.create
+
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.Alignment
+
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.example.playlistmaker.R
+import org.koin.androidx.compose.koinViewModel
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun PlaylistFormContent(
+    state: CreatePlaylistState,
+    buttonLabel: String,
+    onCoverClick: () -> Unit,
+    onNameChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onSubmit: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val outlineColor = MaterialTheme.colorScheme.outline
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(top = 26.dp)
+                .size(312.dp)
+                .align(CenterHorizontally)
+                .clip(RoundedCornerShape(8.dp))
+                .drawBehind {
+                    val strokeWidth = 1.dp.toPx()
+                    val dashWidth = 30.dp.toPx()
+                    val dashGap = 30.dp.toPx()
+                    val cornerRadius = 8.dp.toPx()
+                    val pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashWidth, dashGap), 0f)
+                    drawRoundRect(
+                        color = outlineColor,
+                        style = Stroke(width = strokeWidth, pathEffect = pathEffect),
+                        cornerRadius = CornerRadius(cornerRadius)
+                    )
+                }
+                .clickable { onCoverClick() },
+            contentAlignment = Alignment.Center
+        ) {
+            if (state.coverUri != null) {
+                GlideImage(
+                    model = state.coverUri,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Icon(
+                    painter = painterResource(R.drawable.bg_cover_placeholder_100),
+                    contentDescription = null,
+                    modifier = Modifier.size(100.dp),
+                    tint = Color.Unspecified
+                )
+            }
+        }
+
+        val fieldColors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = MaterialTheme.colorScheme.onBackground,
+            unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+            focusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+            unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
+            cursorColor = MaterialTheme.colorScheme.primary
+        )
+
+        OutlinedTextField(
+            value = state.name,
+            onValueChange = onNameChange,
+            label = { Text(stringResource(R.string.playlist_name_hint)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(top = 32.dp, bottom = 8.dp),
+            singleLine = true,
+            colors = fieldColors
+        )
+
+        OutlinedTextField(
+            value = state.description,
+            onValueChange = onDescriptionChange,
+            label = { Text(stringResource(R.string.playlist_description_hint)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 8.dp),
+            singleLine = true,
+            colors = fieldColors
+        )
+
+        Spacer(Modifier.weight(1f))
+
+        val enabled = state.name.isNotBlank()
+        Button(
+            onClick = onSubmit,
+            enabled = enabled,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 17.dp)
+                .padding(bottom = 32.dp)
+                .height(44.dp),
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                disabledContainerColor = MaterialTheme.colorScheme.outline
+            )
+        ) {
+            Text(buttonLabel, fontSize = 16.sp, color = MaterialTheme.colorScheme.onPrimary)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CreatePlaylistScreen(
+    viewModel: CreatePlaylistViewModel = koinViewModel(),
+    isDarkTheme: Boolean = false,
+    onBack: () -> Unit,
+    onCreated: (Int) -> Unit
+) {
+    val state by viewModel.state.observeAsState(CreatePlaylistState())
+    val playlistCreated by viewModel.playlistCreated.observeAsState()
+    var showExitDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    val pickMedia = rememberLauncherForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri -> uri?.let { viewModel.setCoverUri(it) } }
+
+    fun handleBack() {
+        if (viewModel.hasUnsavedData()) showExitDialog = true else onBack()
+    }
+
+    BackHandler { handleBack() }
+
+    LaunchedEffect(playlistCreated) {
+        playlistCreated?.let { (name, id) ->
+            Toast.makeText(context, context.getString(R.string.playlist_created, name), Toast.LENGTH_SHORT).show()
+            onCreated(id.toInt())
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.new_playlist)) },
+                navigationIcon = {
+                    IconButton(onClick = { handleBack() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        PlaylistFormContent(
+            state = state,
+            buttonLabel = stringResource(R.string.create_playlist),
+            onCoverClick = {
+                pickMedia.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
+            },
+            onNameChange = viewModel::setName,
+            onDescriptionChange = viewModel::setDescription,
+            onSubmit = viewModel::createPlaylist,
+            modifier = Modifier.padding(padding)
+        )
+
+        if (showExitDialog) {
+            AlertDialog(
+                onDismissRequest = { showExitDialog = false },
+                title = { Text(stringResource(R.string.finish_creating_playlist_title)) },
+                text = { Text(stringResource(R.string.finish_creating_playlist_message)) },
+                confirmButton = {
+                    TextButton(onClick = { showExitDialog = false; onBack() }) {
+                        Text(stringResource(R.string.finish))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showExitDialog = false }) {
+                        Text(stringResource(R.string.cancel))
+                    }
+                }
+            )
+        }
+    }
+}

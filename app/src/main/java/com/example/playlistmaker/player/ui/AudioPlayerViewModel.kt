@@ -1,11 +1,17 @@
 package com.example.playlistmaker.player.ui
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.favorites.domain.api.FavoritesInteractor
 import com.example.playlistmaker.player.service.AudioPlayerController
+import com.example.playlistmaker.player.service.AudioPlayerService
 import com.example.playlistmaker.player.service.PlayerServiceState
 import com.example.playlistmaker.playlist.domain.api.PlaylistInteractor
 import com.example.playlistmaker.playlist.domain.models.Playlist
@@ -34,6 +40,30 @@ class AudioPlayerViewModel(
     private var currentTrack: TrackUI? = null
     private var service: AudioPlayerController? = null
     private var stateCollectJob: Job? = null
+    private var isServiceBound = false
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+            val audioPlayerBinder = binder as? AudioPlayerService.AudioPlayerBinder ?: return
+            onServiceBound(audioPlayerBinder.getService())
+        }
+        override fun onServiceDisconnected(name: ComponentName?) {
+            onServiceDisconnected()
+        }
+    }
+
+    fun bindService(context: Context, intent: Intent) {
+        if (!isServiceBound) {
+            isServiceBound = context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    fun unbindService(context: Context) {
+        if (isServiceBound) {
+            context.unbindService(serviceConnection)
+            isServiceBound = false
+        }
+    }
 
     fun setCurrentTrack(track: TrackUI) {
         currentTrack = track
