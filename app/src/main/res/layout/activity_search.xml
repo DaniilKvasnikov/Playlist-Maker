@@ -46,7 +46,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:autofillHints=""
-                android:hint="@string/text_search_edittext"
+                android:hint="@string/text_search"
                 android:textColorHint="@color/text_color_search"
                 android:inputType="text"
                 android:maxLines="1"

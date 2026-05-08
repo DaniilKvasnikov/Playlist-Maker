@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -26,6 +27,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -63,6 +65,7 @@ import org.koin.androidx.compose.koinViewModel
 fun PlaylistFormContent(
     state: CreatePlaylistState,
     buttonLabel: String,
+    isDarkTheme: Boolean = false,
     onCoverClick: () -> Unit,
     onNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
@@ -112,14 +115,28 @@ fun PlaylistFormContent(
             }
         }
 
+        val textColor = if (isDarkTheme) Color(0xFFFFFFFF) else Color(0xFF1A1B22)
+        val borderColor = if (isDarkTheme) Color(0xFFFFFFFF) else Color(0xFFAEAFB4)
+        val fieldColors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = textColor,
+            unfocusedTextColor = textColor,
+            focusedBorderColor = borderColor,
+            unfocusedBorderColor = borderColor,
+            focusedLabelColor = textColor,
+            unfocusedLabelColor = textColor,
+            cursorColor = MaterialTheme.colorScheme.primary
+        )
+
         OutlinedTextField(
             value = state.name,
             onValueChange = onNameChange,
             label = { Text(stringResource(R.string.playlist_name_hint)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            singleLine = true
+                .padding(horizontal = 16.dp)
+                .padding(top = 32.dp, bottom = 8.dp),
+            singleLine = true,
+            colors = fieldColors
         )
 
         OutlinedTextField(
@@ -130,7 +147,8 @@ fun PlaylistFormContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 8.dp),
-            singleLine = true
+            singleLine = true,
+            colors = fieldColors
         )
 
         Spacer(Modifier.weight(1f))
@@ -142,7 +160,8 @@ fun PlaylistFormContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 17.dp)
-                .padding(bottom = 32.dp),
+                .padding(bottom = 32.dp)
+                .height(44.dp),
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -158,6 +177,7 @@ fun PlaylistFormContent(
 @Composable
 fun CreatePlaylistScreen(
     viewModel: CreatePlaylistViewModel = koinViewModel(),
+    isDarkTheme: Boolean = false,
     onBack: () -> Unit,
     onCreated: (Int) -> Unit
 ) {
@@ -198,6 +218,7 @@ fun CreatePlaylistScreen(
         PlaylistFormContent(
             state = state,
             buttonLabel = stringResource(R.string.create_playlist),
+            isDarkTheme = isDarkTheme,
             onCoverClick = {
                 pickMedia.launch(
                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)

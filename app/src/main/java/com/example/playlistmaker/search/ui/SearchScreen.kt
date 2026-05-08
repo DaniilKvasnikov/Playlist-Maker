@@ -51,6 +51,7 @@ private const val SEARCH_DEBOUNCE_DELAY_MS = 500L
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = koinViewModel(),
+    isDarkTheme: Boolean = false,
     onTrackClick: (TrackUI) -> Unit
 ) {
     val query by viewModel.query.observeAsState("")
@@ -73,6 +74,7 @@ fun SearchScreen(
         ) {
             SearchField(
                 query = query,
+                isDarkTheme = isDarkTheme,
                 onQueryChange = { viewModel.setQuery(it) },
                 onClear = {
                     viewModel.setQuery("")
@@ -107,6 +109,7 @@ fun SearchScreen(
 @Composable
 private fun SearchField(
     query: String,
+    isDarkTheme: Boolean,
     onQueryChange: (String) -> Unit,
     onClear: () -> Unit
 ) {
@@ -122,11 +125,12 @@ private fun SearchField(
             .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        val hintColor = if (isDarkTheme) Color(0xFF1A1B22) else Color(0xFFAEAFB4)
         Icon(
             painter = painterResource(R.drawable.ic_search_icon_16),
             contentDescription = null,
             modifier = Modifier.size(18.dp),
-            tint = MaterialTheme.colorScheme.primary
+            tint = hintColor
         )
 
         Spacer(modifier = Modifier.size(8.dp))
@@ -141,9 +145,9 @@ private fun SearchField(
             decorationBox = { inner ->
                 if (query.isEmpty()) {
                     Text(
-                        text = stringResource(R.string.text_search_edittext),
+                        text = stringResource(R.string.text_search),
                         fontSize = 16.sp,
-                        color = Color(0xFFAEAFB4)
+                        color = hintColor
                     )
                 }
                 inner()

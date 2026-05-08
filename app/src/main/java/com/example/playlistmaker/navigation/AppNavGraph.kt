@@ -12,9 +12,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -60,10 +61,15 @@ fun AppNavGraph() {
             contentWindowInsets = WindowInsets(0),
             bottomBar = {
                 if (showBottomBar) {
-                    NavigationBar(
-                        modifier = Modifier.height(56.dp),
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ) {
+                    Column {
+                        HorizontalDivider(
+                            thickness = 1.dp,
+                            color = Color(0xFFE6E8EB)
+                        )
+                        NavigationBar(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            tonalElevation = 0.dp
+                        ) {
                         val navItemColors = NavigationBarItemDefaults.colors(
                             selectedIconColor = MaterialTheme.colorScheme.primary,
                             selectedTextColor = MaterialTheme.colorScheme.primary,
@@ -125,6 +131,7 @@ fun AppNavGraph() {
                             label = { Text(stringResource(R.string.text_settings)) },
                             colors = navItemColors
                         )
+                        }
                     }
                 }
             }
@@ -136,6 +143,7 @@ fun AppNavGraph() {
             ) {
                 composable<SearchRoute> {
                     SearchScreen(
+                        isDarkTheme = actualDarkTheme,
                         onTrackClick = { track ->
                             navController.navigate(AudioPlayerRoute(Gson().toJson(track)))
                         }
@@ -172,6 +180,7 @@ fun AppNavGraph() {
 
                 composable<CreatePlaylistRoute> {
                     CreatePlaylistScreen(
+                        isDarkTheme = actualDarkTheme,
                         onBack = { navController.popBackStack() },
                         onCreated = { playlistId ->
                             navController.previousBackStackEntry
@@ -200,6 +209,7 @@ fun AppNavGraph() {
                     val route = backStackEntry.toRoute<EditPlaylistRoute>()
                     EditPlaylistScreen(
                         playlistId = route.playlistId,
+                        isDarkTheme = actualDarkTheme,
                         onBack = { navController.popBackStack() }
                     )
                 }
