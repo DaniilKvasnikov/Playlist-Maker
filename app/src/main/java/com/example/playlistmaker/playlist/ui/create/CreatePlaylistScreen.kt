@@ -65,13 +65,13 @@ import org.koin.androidx.compose.koinViewModel
 fun PlaylistFormContent(
     state: CreatePlaylistState,
     buttonLabel: String,
-    isDarkTheme: Boolean = false,
     onCoverClick: () -> Unit,
     onNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val outlineColor = MaterialTheme.colorScheme.outline
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -90,7 +90,7 @@ fun PlaylistFormContent(
                     val cornerRadius = 8.dp.toPx()
                     val pathEffect = PathEffect.dashPathEffect(floatArrayOf(dashWidth, dashGap), 0f)
                     drawRoundRect(
-                        color = Color(0xFFAEAFB4),
+                        color = outlineColor,
                         style = Stroke(width = strokeWidth, pathEffect = pathEffect),
                         cornerRadius = CornerRadius(cornerRadius)
                     )
@@ -115,15 +115,13 @@ fun PlaylistFormContent(
             }
         }
 
-        val textColor = if (isDarkTheme) Color(0xFFFFFFFF) else Color(0xFF1A1B22)
-        val borderColor = if (isDarkTheme) Color(0xFFFFFFFF) else Color(0xFFAEAFB4)
         val fieldColors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = textColor,
-            unfocusedTextColor = textColor,
-            focusedBorderColor = borderColor,
-            unfocusedBorderColor = borderColor,
-            focusedLabelColor = textColor,
-            unfocusedLabelColor = textColor,
+            focusedTextColor = MaterialTheme.colorScheme.onBackground,
+            unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+            focusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+            unfocusedLabelColor = MaterialTheme.colorScheme.onBackground,
             cursorColor = MaterialTheme.colorScheme.primary
         )
 
@@ -165,7 +163,7 @@ fun PlaylistFormContent(
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
-                disabledContainerColor = MaterialTheme.colorScheme.onSurfaceVariant
+                disabledContainerColor = MaterialTheme.colorScheme.outline
             )
         ) {
             Text(buttonLabel, fontSize = 16.sp, color = MaterialTheme.colorScheme.onPrimary)
@@ -218,7 +216,6 @@ fun CreatePlaylistScreen(
         PlaylistFormContent(
             state = state,
             buttonLabel = stringResource(R.string.create_playlist),
-            isDarkTheme = isDarkTheme,
             onCoverClick = {
                 pickMedia.launch(
                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)

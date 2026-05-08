@@ -34,7 +34,6 @@ import org.koin.androidx.compose.koinViewModel
 fun EditPlaylistScreen(
     playlistId: Int,
     viewModel: EditPlaylistViewModel = koinViewModel(),
-    isDarkTheme: Boolean = false,
     onBack: () -> Unit
 ) {
     LaunchedEffect(Unit) { viewModel.loadPlaylist(playlistId) }
@@ -72,7 +71,6 @@ fun EditPlaylistScreen(
         PlaylistFormContent(
             state = state,
             buttonLabel = stringResource(R.string.save),
-            isDarkTheme = isDarkTheme,
             onCoverClick = {
                 pickMedia.launch(
                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)

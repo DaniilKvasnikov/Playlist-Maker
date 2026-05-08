@@ -64,7 +64,7 @@ fun AppNavGraph() {
                     Column {
                         HorizontalDivider(
                             thickness = 1.dp,
-                            color = Color(0xFFE6E8EB)
+                            color = MaterialTheme.colorScheme.outlineVariant
                         )
                         NavigationBar(
                             containerColor = MaterialTheme.colorScheme.surface,
@@ -143,7 +143,6 @@ fun AppNavGraph() {
             ) {
                 composable<SearchRoute> {
                     SearchScreen(
-                        isDarkTheme = actualDarkTheme,
                         onTrackClick = { track ->
                             navController.navigate(AudioPlayerRoute(Gson().toJson(track)))
                         }
@@ -180,7 +179,6 @@ fun AppNavGraph() {
 
                 composable<CreatePlaylistRoute> {
                     CreatePlaylistScreen(
-                        isDarkTheme = actualDarkTheme,
                         onBack = { navController.popBackStack() },
                         onCreated = { playlistId ->
                             navController.previousBackStackEntry
@@ -209,7 +207,6 @@ fun AppNavGraph() {
                     val route = backStackEntry.toRoute<EditPlaylistRoute>()
                     EditPlaylistScreen(
                         playlistId = route.playlistId,
-                        isDarkTheme = actualDarkTheme,
                         onBack = { navController.popBackStack() }
                     )
                 }

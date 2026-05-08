@@ -43,6 +43,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -99,7 +101,7 @@ fun PlaylistDetailsScreen(
                 is PlaylistDetailsState.Content -> {
                     if (s.tracks.isEmpty()) {
                         Text(
-                            text = "В плейлисте нет треков",
+                            text = stringResource(R.string.featured_tracks_empty),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(16.dp),
@@ -125,7 +127,7 @@ fun PlaylistDetailsScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFE6E8EB))
+                .background(MaterialTheme.colorScheme.secondaryContainer)
         ) {
             when (val s = state) {
                 is PlaylistDetailsState.Loading -> CircularProgressIndicator(Modifier.align(Center))
@@ -145,7 +147,7 @@ fun PlaylistDetailsScreen(
                         Column(
                             Modifier
                                 .fillMaxWidth()
-                                .background(Color(0xFFE6E8EB))
+                                .background(MaterialTheme.colorScheme.secondaryContainer)
                                 .padding(horizontal = 16.dp)
                                 .padding(top = 24.dp)
                         ) {
@@ -153,13 +155,13 @@ fun PlaylistDetailsScreen(
                                 text = s.playlist.name,
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF1A1B22)
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                             if (s.playlist.description.isNotEmpty()) {
                                 Text(
                                     text = s.playlist.description,
                                     fontSize = 18.sp,
-                                    color = Color(0xFF1A1B22),
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                                     modifier = Modifier.padding(top = 8.dp)
                                 )
                             }
@@ -167,16 +169,25 @@ fun PlaylistDetailsScreen(
                                 modifier = Modifier.padding(top = 8.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("${s.totalDurationMinutes} минут", fontSize = 18.sp, color = Color(0xFF1A1B22))
+                                val minutes = s.totalDurationMinutes.toIntOrNull() ?: 0
+                                Text(
+                                    text = pluralStringResource(R.plurals.minutes_count, minutes, minutes),
+                                    fontSize = 18.sp,
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                                )
                                 Icon(
                                     painter = painterResource(R.drawable.ic_item_track_point_13),
                                     contentDescription = null,
                                     modifier = Modifier
                                         .padding(horizontal = 4.dp)
                                         .size(13.dp),
-                                    tint = Color(0xFF1A1B22)
+                                    tint = MaterialTheme.colorScheme.onSecondaryContainer
                                 )
-                                Text("${s.playlist.trackCount} треков", fontSize = 18.sp, color = Color(0xFF1A1B22))
+                                Text(
+                                    text = pluralStringResource(R.plurals.track_count, s.playlist.trackCount, s.playlist.trackCount),
+                                    fontSize = 18.sp,
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                                )
                             }
                             Row(Modifier.padding(top = 16.dp)) {
                                 IconButton(onClick = {
@@ -186,7 +197,7 @@ fun PlaylistDetailsScreen(
                                         painter = painterResource(R.drawable.ic_share_24),
                                         contentDescription = null,
                                         modifier = Modifier.size(24.dp),
-                                        tint = Color(0xFF1A1B22)
+                                        tint = MaterialTheme.colorScheme.onSecondaryContainer
                                     )
                                 }
                                 IconButton(
@@ -197,7 +208,7 @@ fun PlaylistDetailsScreen(
                                         painter = painterResource(R.drawable.ic_more_vert_24),
                                         contentDescription = null,
                                         modifier = Modifier.size(24.dp),
-                                        tint = Color(0xFF1A1B22)
+                                        tint = MaterialTheme.colorScheme.onSecondaryContainer
                                     )
                                 }
                             }
@@ -229,7 +240,7 @@ fun PlaylistDetailsScreen(
                 PlaylistBottomSheetItem(playlist = playlist, onClick = {})
             }
             Text(
-                text = "Поделиться",
+                text = stringResource(R.string.menu_share),
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
@@ -240,7 +251,7 @@ fun PlaylistDetailsScreen(
                 fontSize = 16.sp
             )
             Text(
-                text = "Редактировать",
+                text = stringResource(R.string.edit_playlist),
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
@@ -251,7 +262,7 @@ fun PlaylistDetailsScreen(
                 fontSize = 16.sp
             )
             Text(
-                text = "Удалить плейлист",
+                text = stringResource(R.string.menu_delete_playlist),
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
@@ -267,38 +278,39 @@ fun PlaylistDetailsScreen(
     trackToDelete?.let { track ->
         AlertDialog(
             onDismissRequest = { trackToDelete = null },
-            title = { Text("Хотите удалить трек?") },
+            title = { Text(stringResource(R.string.delete_track_dialog_message)) },
             confirmButton = {
                 TextButton(onClick = {
                     viewModel.removeTrack(track.trackId)
                     trackToDelete = null
                 }) {
-                    Text("Удалить")
+                    Text(stringResource(R.string.delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { trackToDelete = null }) {
-                    Text("Отмена")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
     }
 
     if (showDeletePlaylistDialog) {
+        val playlistName = (state as? PlaylistDetailsState.Content)?.playlist?.name.orEmpty()
         AlertDialog(
             onDismissRequest = { showDeletePlaylistDialog = false },
-            title = { Text("Хотите удалить плейлист?") },
+            title = { Text(stringResource(R.string.track_already_in_playlist, playlistName)) },
             confirmButton = {
                 TextButton(onClick = {
                     viewModel.deletePlaylist()
                     showDeletePlaylistDialog = false
                 }) {
-                    Text("Удалить")
+                    Text(stringResource(R.string.delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeletePlaylistDialog = false }) {
-                    Text("Отмена")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )

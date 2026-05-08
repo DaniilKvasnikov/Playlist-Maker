@@ -98,10 +98,10 @@ private fun SettingsContent(
     onTerms: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    val textColor = if (isDarkTheme) Color(0xFFFFFFFF) else Color(0xFF1A1B22)
-    val iconTint = if (isDarkTheme) Color(0xFFFFFFFF) else Color(0xFFAEAFB4)
-    val switchCheckedThumb = if (isDarkTheme) Color(0xFF3772E7) else Color(0xFF00D6C3)
-    val switchCheckedTrack = if (isDarkTheme) Color(0xFF9FBBF3) else Color(0xFF76EAE0)
+    val textColor = MaterialTheme.colorScheme.onBackground
+    val iconTint = MaterialTheme.colorScheme.onSurfaceVariant
+    val switchCheckedThumb = MaterialTheme.colorScheme.tertiary
+    val switchCheckedTrack = MaterialTheme.colorScheme.tertiaryContainer
 
     Column(modifier = modifier.fillMaxSize()) {
         Row(

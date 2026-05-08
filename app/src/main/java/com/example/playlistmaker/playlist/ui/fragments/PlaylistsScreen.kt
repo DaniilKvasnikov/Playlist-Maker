@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,7 +55,7 @@ fun PlaylistsScreen(
                     contentColor = MaterialTheme.colorScheme.surface
                 )
             ) {
-                Text("Новый плейлист", fontSize = 14.sp)
+                Text(stringResource(R.string.new_playlist), fontSize = 14.sp)
             }
             if (playlists.isEmpty()) {
                 Box(
@@ -72,7 +73,7 @@ fun PlaylistsScreen(
                             modifier = Modifier.size(120.dp)
                         )
                         Text(
-                            text = "Ваши плейлисты",
+                            text = stringResource(R.string.playlist_empty),
                             fontSize = 19.sp,
                             textAlign = TextAlign.Center
                         )
